@@ -14,7 +14,7 @@
     "publisher": "Phantom Cyber",
     "consolidate_widgets": false,
     "logo": "reversinglabs-logo.png",
-    "license": "Copyright (c) Phantom Cyber Corporation 2015",
+    "license": "Copyright (c) ReversingLabs Inc 2016-2017",
     "configuration": {
       "username": {
         "description": "Username", 
