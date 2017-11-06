@@ -1,8 +1,8 @@
 {
-    "appid"    : "b2ea15f8-9daa-45f8-a5e3-324b612e85ef",
-    "name"   : "ReversingLabs",
+    "appid": "b2ea15f8-9daa-45f8-a5e3-324b612e85ef",
+    "name": "ReversingLabs",
     "package_name": "phantom_reversinglabs",
-    "description": "This app implements the investigative action 'file reputation' on the ReversingLabs reputation service.",
+    "description": "This app implements the investigative action 'file reputation' on the ReversingLabs reputation service",
     "type": "reputation",
     "main_module": "reversinglabs_connector.pyc",
     "app_version": "1.2.19",
@@ -14,16 +14,16 @@
     "publisher": "Phantom Cyber",
     "consolidate_widgets": false,
     "logo": "reversinglabs-logo.png",
-    "license": "Copyright (c) Phantom Cyber Corporation 2015",
+    "license": "Copyright (c) ReversingLabs Inc 2016-2017",
     "configuration": {
       "username": {
-        "description": "Username", 
+        "description": "Username",
         "order": 0,
         "data_type": "string",
         "required": true
       },
       "password": {
-        "description": "Password", 
+        "description": "Password",
         "data_type": "password",
         "order": 1,
         "required": true
@@ -39,7 +39,7 @@
     "actions": [
       {
         "action": "test connectivity",
-        "description": "Validate the asset configuration for connectivity.",
+        "description": "Validate the asset configuration for connectivity",
         "type": "test",
         "identifier": "test_asset_connectivity",
         "read_only": true,
