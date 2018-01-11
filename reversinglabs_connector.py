@@ -66,8 +66,6 @@ class ReversinglabsConnector(BaseConnector):
         query['rl']['query']['hash_type'] = hash_type
         query['rl']['query']['hashes'] = [md5_hash]
 
-        self.save_progress(REVERSINGLABS_MSG_CONNECTING_WITH_URL, url=MAL_PRESENCE_API_URL, hash_type=hash_type)
-
         try:
             r = requests.post(MAL_PRESENCE_API_URL, auth=self._auth, data=json.dumps(query), headers=self._headers)
         except Exception as e:
@@ -146,7 +144,7 @@ class ReversinglabsConnector(BaseConnector):
         query['rl']['query']['hashes'] = [hash_to_query]
 
         # First the malware presence
-        self.save_progress(REVERSINGLABS_MSG_CONNECTING_WITH_URL, url=MAL_PRESENCE_API_URL, hash_type=hash_type)
+        self.save_progress(REVERSINGLABS_MSG_CONNECTING_WITH_URL)
 
         try:
             r = requests.post(MAL_PRESENCE_API_URL, auth=self._auth, data=json.dumps(query), headers=self._headers)
@@ -185,7 +183,7 @@ class ReversinglabsConnector(BaseConnector):
             # No need to do anything more for this hash
             return action_result.set_status(phantom.APP_SUCCESS)
 
-        self.save_progress(REVERSINGLABS_MSG_CONNECTING_WITH_URL, url=XREF_API_URL, hash_type=hash_type)
+        self.save_progress(REVERSINGLABS_MSG_CONNECTING_WITH_URL)
 
         try:
             r = requests.post(XREF_API_URL, auth=self._auth, data=json.dumps(query), headers=self._headers)
