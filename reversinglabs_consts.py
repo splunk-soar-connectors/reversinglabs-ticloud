@@ -1,7 +1,7 @@
 # --
 # File: reversinglabs_consts.py
 #
-# Copyright (c) ReversingLabs Inc 2016-2018
+# Copyright (c) ReversingLabs Inc 2016-2019
 #
 # This unpublished material is proprietary to ReversingLabs Inc.
 # All rights reserved.
@@ -21,7 +21,7 @@ REVERSINGLABS_SUCC_CONNECTIVITY_TEST = "Connectivity test passed"
 REVERSINGLABS_ERR_CONNECTIVITY_TEST = "Connectivity test failed"
 REVERSINGLABS_MSG_CHECK_CREDENTIALS = "Please check your credentials or the network connectivity"
 REVERSINGLABS_ERR_INVALID_HASH = "Invalid hash"
-REVERSINGLABS_ERR_MALWARE_PRESENCE_QUERY_FAILED = "Query to check if hash is malware failed with HTTP return code {ret_code}"
+REVERSINGLABS_ERR_MALWARE_PRESENCE_QUERY_FAILED = "Query to check if hash is malware failed with HTTP return code: {ret_code} and reason: {ret_reason}"
 REVERSINGLABS_GENERATED_RANDOM_HASH = "Generated random hash for testing connectivity"
 
 # Jsons used in params, result, summary etc.
