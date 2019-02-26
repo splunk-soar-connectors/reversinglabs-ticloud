@@ -1,6 +1,6 @@
 # --
 #
-# Copyright (c) ReversingLabs Inc 2016-2018
+# Copyright (c) ReversingLabs Inc 2016-2019
 #
 # This unpublished material is proprietary to ReversingLabs Inc.
 # All rights reserved.
@@ -152,7 +152,7 @@ class ReversinglabsConnector(BaseConnector):
             return action_result.set_status(phantom.APP_ERROR, "Request to server failed", e)
 
         if (r.status_code != 200):
-            return action_result.set_status(phantom.APP_ERROR, REVERSINGLABS_ERR_MALWARE_PRESENCE_QUERY_FAILED, ret_code=r.status_code)
+            return action_result.set_status(phantom.APP_ERROR, REVERSINGLABS_ERR_MALWARE_PRESENCE_QUERY_FAILED, ret_code=r.status_code, ret_reason=r.reason)
 
         try:
             rl_result = r.json()
