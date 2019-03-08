@@ -1,0 +1,287 @@
+{% extends 'widgets/widget_template.html' %}
+{% load custom_template %}
+{% block body_color %}white{% endblock %}
+{% block custom_title_prop %}{% if title_logo %}style="background-size: auto 60%; background-position: 50%; background-repeat: no-repeat; background-image: url('/app_resource/{{ title_logo }}');"{% endif %}{% endblock %}
+{% block widget_content %}
+
+<!-- 
+File: ./reversinglabs/reversinglabs_template.html
+
+Copyright (c) ReversingLabs Inc 2016-2019
+
+This unpublished material is proprietary to ReversingLabs Inc.
+All rights reserved.
+Reproduction or distribution, in whole
+or in part, is forbidden except by express written permission
+of ReversingLabs Inc.
+
+-->
+
+<style>
+
+.widget-container {
+  width: 1170px !important;
+}
+
+#reversinglabs {
+  color: #484848;
+  padding: 0;
+}
+
+#reversinglabs > #headers > div {
+  display: inline-block;
+  text-align: center;
+  font-size: 12px;
+}
+
+#reversinglabs > #headers {
+  position: relative;
+  border-bottom: 2px solid rgba(80, 80, 120, .2);
+  padding-bottom: 10px;
+  color: rgb(119, 150, 150);
+}
+
+#reversinglabs > #headers > #results {
+  width: 40%;
+}
+
+#reversinglabs > #headers > #hash {
+  text-align: left;
+  padding-left: 10px;
+  width: calc(60% - (68px * 2) - 10px);
+}
+
+#reversinglabs > #headers > #detections, #reversinglabs > #headers > #scanners  {
+  width: 68px;
+}
+
+#reversinglabs #rl-body > #rl-stats {
+  width: 40%;
+  float: left;
+  padding-top: 15px;
+  padding-right: 15px;
+  padding-left: 10px;
+}
+
+#reversinglabs #rl-body > #rl-stats > #headline #pct-value {
+  font-size: 44px;
+  text-align: center;
+  font-weight: bold;
+}
+
+#reversinglabs #rl-body > #rl-stats > #headline #pct-title {
+  font-size: 16px;
+  text-align: center;
+  font-weight: bold;
+  margin-top: -10px;
+  color: rgb(119, 140, 150);
+}
+
+#reversinglabs #files {
+  width: 1060px;
+  margin: 0 auto;
+  padding-top: 30px;
+  position: relative;
+}
+
+.files__item {
+  position: relative;
+  margin-bottom: 30px;
+  float: left;
+}
+.rl-app-logo {
+    position: absolute;
+    z-index: 100;
+    border: 10px solid #ffffff;
+    width: 40px;
+    height: 40px;
+    border-radius: 40px;
+    top: -10px;
+    right: -15px;
+    box-sizing: content-box;
+}
+#reversinglabs #files .tb-row {
+  font-size: 12px;
+  text-align: left;
+  border-bottom: 1px solid rgba(20, 20, 50, .2);
+}
+
+#reversinglabs #files .tb-cell {
+  padding-bottom: 10px;
+  padding-top: 10px;
+  padding-left: 10px;
+  font-weight: 300;
+}
+.rl-result-full {
+  width: 100%;
+  background-color: #f6f6f6;  
+}
+.rl-result-full .label-base {
+    background-color: #ebebeb;
+    padding: 10px;
+    text-align: center;
+    margin-right: 40px;
+    position: relative;
+    min-width: 100px;
+    display: inline-block;
+}
+.rl-result-full .label-base:after {
+    content: "";
+    position: absolute;
+    display: block;
+    width: 0;
+    height: 0;
+    right: -20px;
+    top: 0;
+    border-top: 20px solid transparent;
+    border-bottom: 20px solid transparent;
+    border-left: 20px solid #ebebeb;
+}
+
+.dark-theme .rl-result-full,
+.dark-theme .rl-result-full .label-base {
+   background-color: #444357;
+}
+
+.side-cells {
+    float: left;
+    width: 100px;
+    text-align: center;
+}
+.side-cells .rl-result-half {
+    border: 1px solid #eaeaea;
+    position: relative;
+    top: -1px;
+    font-weight: 600;
+    height: 85px;
+    padding-top: 18px;
+}
+.side-cells .rl-result-half:last-child {
+    top: -2px;
+}
+.side-cells .rl-result-half span:first-child {
+  font-size: 13px;
+}
+.side-cells .rl-result-half span {
+  display:block;
+}
+.side-cells .number {
+  font-weight: 400;
+  color: #bebebe;
+  font-size: 22px;
+}
+
+.main-data .rl-result-half {
+    float: left;
+    width: 360px;
+    border-bottom: 1px solid #eaeaea;
+    height: 56px;
+    line-height: 56px;
+    padding: 0 20px;
+    font-weight: 400;
+}
+.main-data .rl-result-half:nth-child(even){
+    width: 600px;
+}
+.main-data .label-base {
+  font-weight: 300;
+}
+[class^="label"]{
+  font-weight: 500;
+}
+.label-full {
+  display: block;
+  width: 100%;
+}
+#reversinglabs #other-stats > div {
+  display: inline-block;
+  text-align: center;
+  width: 32%;
+  padding-top: 15px;
+}
+.MALICIOUS {
+  color: #d00000;
+}
+.SUSPICIOUS {
+ color: #f8a80d;
+}
+.UNDEFINED {
+  color: #ffb53c;
+}
+.UNKNOWN {
+  color: #3d3d3d;
+}
+
+.dark-theme .UNKNOWN {
+  color: #4d5fa7;
+}
+.KNOWN {
+  color: #94b60a;
+}
+}
+#reversinglabs #other-stats .item-count {
+  font-size: 20px;
+  font-weight: bold;
+}
+
+#reversinglabs #other-stats .item-title {
+  color: rgb(119, 150, 150);
+}
+
+#reversinglabs #other-stats > div.rl_middle {
+  border-left: 1px solid rgba(20, 20, 50, .2);
+  border-right: 1px solid rgba(20, 20, 50, .2);
+}
+
+.rl-result-hash {
+    width: calc(100% - (68px * 2) - 10px);
+    vertical-align: middle;
+}
+
+.rl-result-count {
+    width: 68px; text-align: center;
+    vertical-align: middle;
+}
+
+</style>
+
+<script>
+
+// format dates 
+function formatDates(){
+  var elements = document.getElementsByClassName('rlDate');
+  for (var i = 0; i < elements.length; i++) {
+    var rlStr = elements[i].innerHTML;
+    var rlText = rlStr.replace(/T/g, " - ");
+    elements[i].innerHTML = rlText;
+  }
+}
+
+</script>
+
+
+<div id="reversinglabs" class="row-fluid p-t-10" onwidgetload="formatDates(this);" onwidgetupdate="reload_widget(this);">
+  <div id="rl-body">
+    <div id="files">
+      {% for hash, det, scan, res in results %}
+      <div class="files__item">
+          <img class="rl-app-logo" src="https://www.reversinglabs.com/sites/files/new/titaniumcloud-logo_0.svg" alt="A1000">
+          <div class="ellipsis rl-result-full"><span class="label-base">Hash</span>{{ hash|upper }}</div>
+          <div class="side-cells">
+          <div class="rl-result-half"><span class="label-base">Detections</span><span class="number">{{ det }}</span></div>
+          <div class="rl-result-half"><span class="label-base">Scanners</span><span class="number">{{ scan }}</span></div>  
+          </div>
+          <div class="main-data">
+            <div class="ellipsis rl-result-half"><span class="label-base">File status:</span><span class="file-status {{ res.status }}"> {{ res.status }}</span></div>
+            <div class="ellipsis rl-result-half"><span class="label-base">File type:</span><span> {{ res.sample_type }}</span></div>
+            <div class="ellipsis rl-result-half"><span class="label-base">File threat name:</span><span> {{ res.threat_name }}</span></div>
+            <div class="ellipsis rl-result-half"><span class="label-base">File threat level (5 - highest):</span><span> {{ res.threat_level }}</span></div>
+            <div class="ellipsis rl-result-half"><span class="label-base">File source trust factor (0 - highest):</span><span> {{ res.trust_factor }}</span></div>
+            <div class="ellipsis rl-result-half"><span class="label-base">First / last time seen:</span><span class="date rlDate"> {{ res.first_seen_on }} / {{ res.last_seen_on }}</span></div>
+          </div>
+        </div>
+        {% endfor %}
+  </div>
+</div>
+
+{% endblock %}
