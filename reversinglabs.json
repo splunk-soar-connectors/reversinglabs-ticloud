@@ -1,11 +1,11 @@
 {
-    "appid": "f33d062c-5f07-4017-a71e-5471f1c56839",
-    "name": "TitaniumCloud",
+    "appid": "b2ea15f8-9daa-45f8-a5e3-324b612e85ef",
+    "name": "RL TitaniumCloud File Reputation",
     "package_name": "phantom_titaniumcloud",
     "description": "This app implements investigative actions on the ReversingLabs reputation service",
     "type": "reputation",
     "main_module": "reversinglabs_connector.pyc",
-    "app_version": "1.2.36",
+    "app_version": "1.3.2",
     "utctime_updated": "2019-03-05T23:14:12.000000Z",
     "product_vendor": "ReversingLabs",
     "product_name": "TitaniumCloud",
@@ -17,16 +17,29 @@
     "logo_dark": "logo_reversinglabs_dark.svg",
     "license": "Copyright (c) ReversingLabs Inc 2016-2019",
     "configuration": {
+        "url": {
+            "description": "TitaniumCloud or T1000 url",
+            "order": 0,
+            "data_type": "string",
+            "required": false 
+        },
+        "verify_server_cert": {
+            "data_type": "boolean",
+            "description": "Verify server certificate",
+            "required": true,
+            "order": 1,
+            "default": true
+        },
         "username": {
             "description": "Username",
-            "order": 0,
+            "order": 2,
             "data_type": "string",
             "required": true
         },
         "password": {
             "description": "Password",
             "data_type": "password",
-            "order": 1,
+            "order": 3,
             "required": true
         }
     },
