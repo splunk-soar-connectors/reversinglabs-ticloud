@@ -32,9 +32,8 @@ REVERSINGLABS_JSON_TOTAL_SCANS = "total_scans"
 REVERSINGLABS_JSON_TOTAL_POSITIVES = "total_positives"
 REVERSINGLABS_JSON_STATUS = "status"
 
-# Other constants used in the connector
-MAL_PRESENCE_API_URL = 'https://api.reversinglabs.com/api/databrowser/malware_presence/bulk_query/json?extended=true'
-XREF_API_URL = 'https://api.reversinglabs.com/api/xref/v2/bulk_query/json'
-
 MAL_PRESENCE_API_URL = 'https://ticloud-aws1-api.reversinglabs.com/api/databrowser/malware_presence/bulk_query/json?extended=true'
 XREF_API_URL = 'https://ticloud-aws1-api.reversinglabs.com/api/xref/v2/bulk_query/json'
+
+MAL_PRESENCE_API_URL_ENDPOINT = '/api/databrowser/malware_presence/bulk_query/json?extended=true'
+XREF_API_URL_ENDPOINT = '/api/xref/v2/bulk_query/json'

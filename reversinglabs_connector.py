@@ -39,6 +39,9 @@ class ReversinglabsConnector(BaseConnector):
         self._malicious_status = ["MALICIOUS", "SUSPICIOUS"]
         self._headers = {'content-type': 'application/octet-stream'}
         self._auth = None
+        self._mwp_url = MAL_PRESENCE_API_URL
+        self._xref_url = XREF_API_URL
+        self._verify_cert = True
 
     def initialize(self):
 
@@ -46,6 +49,13 @@ class ReversinglabsConnector(BaseConnector):
         # setup the auth
         self._auth = HTTPBasicAuth(phantom.get_req_value(config, phantom.APP_JSON_USERNAME),
                 phantom.get_req_value(config, phantom.APP_JSON_PASSWORD))
+
+        if "url" in config:
+            self._mwp_url = "{0}{1}".format(config["url"], MAL_PRESENCE_API_URL_ENDPOINT)
+            self._xref_url = "{0}{1}".format(config["url"], XREF_API_URL_ENDPOINT)
+
+        if "verify_server_cert" in config:
+            self._verify_cert = config["verify_server_cert"]
 
         self.debug_print('self.status', self.get_status())
 
@@ -67,7 +77,7 @@ class ReversinglabsConnector(BaseConnector):
         query['rl']['query']['hashes'] = [md5_hash]
 
         try:
-            r = requests.post(MAL_PRESENCE_API_URL, auth=self._auth, data=json.dumps(query), headers=self._headers)
+            r = requests.post(self._mwp_url, auth=self._auth, data=json.dumps(query), headers=self._headers, verify=self._verify_cert)
         except Exception as e:
             self.set_status(phantom.APP_ERROR, 'Request to server failed', e)
             self.save_progress(REVERSINGLABS_SUCC_CONNECTIVITY_TEST)
@@ -78,6 +88,7 @@ class ReversinglabsConnector(BaseConnector):
             status_message = '{0}. {1}. HTTP status_code: {2}, reason: {3}'.format(REVERSINGLABS_ERR_CONNECTIVITY_TEST,
                 REVERSINGLABS_MSG_CHECK_CREDENTIALS, r.status_code, r.reason)
             self.append_to_message(status_message)
+            self.append_to_message(self._mwp_url)
             return self.get_status()
 
         return self.set_status_save_progress(phantom.APP_SUCCESS, REVERSINGLABS_SUCC_CONNECTIVITY_TEST)
@@ -147,7 +158,7 @@ class ReversinglabsConnector(BaseConnector):
         self.save_progress(REVERSINGLABS_MSG_CONNECTING_WITH_URL)
 
         try:
-            r = requests.post(MAL_PRESENCE_API_URL, auth=self._auth, data=json.dumps(query), headers=self._headers)
+            r = requests.post(self._mwp_url, auth=self._auth, data=json.dumps(query), headers=self._headers, verify=self._verify_cert)
         except Exception as e:
             return action_result.set_status(phantom.APP_ERROR, "Request to server failed", e)
 
@@ -186,7 +197,7 @@ class ReversinglabsConnector(BaseConnector):
         self.save_progress(REVERSINGLABS_MSG_CONNECTING_WITH_URL)
 
         try:
-            r = requests.post(XREF_API_URL, auth=self._auth, data=json.dumps(query), headers=self._headers)
+            r = requests.post(self._xref_url, auth=self._auth, data=json.dumps(query), headers=self._headers, verify=self._verify_cert)
         except Exception as e:
             return action_result.set_status(phantom.APP_ERROR, "XREF API Request to server failed", e)
 
