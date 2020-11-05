@@ -5,7 +5,7 @@
     "description": "This app implements investigative actions on the ReversingLabs reputation service",
     "type": "reputation",
     "main_module": "reversinglabs_connector.pyc",
-    "app_version": "1.2.36",
+    "app_version": "1.3.2",
     "utctime_updated": "2019-03-27T01:00:59.000000Z",
     "product_vendor": "ReversingLabs",
     "product_name": "TitaniumCloud",
