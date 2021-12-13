@@ -1,0 +1,673 @@
+{
+    "appid": "b2ea15f8-9daa-45f8-a5e3-324b612e85ef",
+    "name": "RL TitaniumCloud REST APIs",
+    "package_name": "phantom_titaniumcloud",
+    "description": "This app integrates with ReversingLabs cloud services to implement reputation and investigative actions for file samples and their metadata.",
+    "type": "reputation",
+    "main_module": "reversinglabs_connector.py",
+    "app_version": "2.3",
+    "utctime_updated": "2021-08-02T16:06:46.000000Z",
+    "product_vendor": "ReversingLabs",
+    "product_name": "TitaniumCloud",
+    "product_version_regex": ".*",
+    "min_phantom_version": "3.0.251",
+    "publisher": "ReversingLabs",
+    "consolidate_widgets": false,
+    "logo": "logo_reversinglabs.svg",
+    "logo_dark": "logo_reversinglabs_dark.svg",
+    "license": "Copyright (c) ReversingLabs Inc 2016-2021",
+    "python_version": "2.7",
+    "pip_dependencies": {
+        "wheel": [
+            {
+                "module": "certifi",
+                "input_file": "wheels/certifi-2019.11.28-py2.py3-none-any.whl"
+            },
+            {
+                "module": "chardet",
+                "input_file": "wheels/chardet-3.0.4-py2.py3-none-any.whl"
+            },
+            {
+                "module": "idna",
+                "input_file": "wheels/idna-2.8-py2.py3-none-any.whl"
+            },
+            {
+                "module": "requests",
+                "input_file": "wheels/requests-2.22.0-py2.py3-none-any.whl"
+            },
+            {
+                "module": "requests_file",
+                "input_file": "wheels/requests_file-1.4.3-py2.py3-none-any.whl"
+            },
+            {
+                "module": "six",
+                "input_file": "wheels/six-1.13.0-py2.py3-none-any.whl"
+            },
+            {
+                "module": "tldextract",
+                "input_file": "wheels/tldextract-2.2.2-py2.py3-none-any.whl"
+            },
+            {
+                "module": "urllib3",
+                "input_file": "wheels/urllib3-1.25.7-py2.py3-none-any.whl"
+            },
+            {
+                "module": "rl_threat_hunting",
+                "input_file": "wheels/python_rl_threat_hunting-1.588-py2-none-any.whl"
+            }
+        ]
+    },
+    "configuration": {
+        "username": {
+            "description": "Username",
+            "order": 0,
+            "data_type": "string",
+            "required": true
+        },
+        "password": {
+            "description": "Password",
+            "data_type": "password",
+            "order": 1,
+            "required": true
+        },
+        "url": {
+            "description": "TitaniumCloud or T1000 url",
+            "order": 2,
+            "data_type": "string",
+            "required": false 
+        },
+        "verify_server_cert": {
+            "data_type": "boolean",
+            "description": "Verify server certificate",
+            "required": true,
+            "order": 1,
+            "default": true
+        }
+    },
+    "actions": [
+        {
+            "action": "joe sandbox adapter",
+            "description": "ReversingLabs plug-in for Joe Sandbox which will update threat hunting metadata with dynamic analysis results.",
+            "type": "investigate",
+            "identifier": "add_joe_results",
+            "read_only": true,
+            "lock": {
+                "enabled": false,
+                "data_path": "parameters.hunting_report_vault_id"
+            },
+            "parameters": {
+                "joe_report_vault_id": {
+                    "description": "Joe Sandbox dynamic analysis report vault ID",
+                    "data_type": "string",
+                    "order": 0,
+                    "required": false
+                },
+                "hunting_report_vault_id": {
+                    "description": "Threat hunting report vault id",
+                    "data_type": "string",
+                    "order": 1,
+                    "required": true
+                }
+            },
+            "output": [
+                {
+                    "data_path": "action_result.status",
+                    "data_type": "string"
+                },
+                {
+                    "data_path": "action_result.message",
+                    "data_type": "string"
+                },
+                {
+                    "data_path": "action_result.data",
+                    "data_type": "string"
+                },
+                {
+                    "data_path": "action_result.summary",
+                    "data_type": "string"
+                },
+                {
+                    "data_path": "action_result.parameter.joe_report_vault_id",
+                    "data_type": "string"
+                },
+                {
+                    "data_path": "action_result.parameter.hunting_report_vault_id",
+                    "data_type": "string"
+                },
+                {
+                    "data_path": "action_result.data.*.hunting_report_vault_id",
+                    "data_type": "string"
+                },
+
+
+                {
+                    "data_path": "action_result.data.*.readable_summary.classification.classification",
+                    "data_type": "string"
+                },
+                {
+                    "data_path": "action_result.data.*.readable_summary.classification.description",
+                    "data_type": "string"
+                },
+                {
+                    "data_path": "action_result.data.*.readable_summary.classification.reason",
+                    "data_type": "string"
+                },
+                {
+                    "data_path": "action_result.data.*.readable_summary.classification.threat.name",
+                    "data_type": "string"
+                },
+                {
+                    "data_path": "action_result.data.*.readable_summary.classification.threat.description",
+                    "data_type": "string"
+                },
+                {
+                    "data_path": "action_result.data.*.readable_summary.classification.threat.factor",
+                    "data_type": "numeric"
+                }
+            ],
+            "versions": "EQ(*)",
+            "render": {
+                "type": "custom",
+                "width": 10,
+                "height": 5,
+                "view": "reversinglabs_view.hunting_visualization",
+                "title": "ReversingLabs Joe Sandbox plug-in for threat hunting."
+            }
+        },
+        {
+            "action": "test connectivity",
+            "description": "Validate the asset configuration for connectivity",
+            "type": "test",
+            "identifier": "test_asset_connectivity",
+            "read_only": true,
+            "lock": {
+                "enabled": false
+            },
+            "parameters": {},
+            "output": [],
+            "versions": "EQ(*)"
+        },
+        {
+            "action": "file reputation",
+            "description": "Queries ReversingLabs for file reputation info",
+            "type": "investigate",
+            "identifier": "file_reputation",
+            "read_only": true,
+            "lock": {
+                "enabled": false,
+                "data_path": "parameters.hunting_report_vault_id"
+            },
+            "parameters": {
+                "hash": {
+                    "description": "File hash to query",
+                    "data_type": "string",
+                    "order": 0,
+                    "required": false
+                },
+                "hunting_report_vault_id": {
+                    "description": "Threat hunting report vault id",
+                    "data_type": "string",
+                    "order": 1,
+                    "required": false
+                }
+            },
+            "output": [
+                {
+                    "data_path": "action_result.status",
+                    "data_type": "string"
+                },
+                {
+                    "data_path": "action_result.message",
+                    "data_type": "string"
+                },
+                {
+                    "data_path": "action_result.data",
+                    "data_type": "string"
+                },
+                {
+                    "data_path": "action_result.summary",
+                    "data_type": "string"
+                },
+                {
+                    "data_path": "action_result.parameter.hash",
+                    "data_type": "string"
+                },
+                {
+                    "data_path": "action_result.parameter.hunting_report_vault_id",
+                    "data_type": "string"
+                },
+                {
+                    "data_path": "action_result.data.*.hunting_report_vault_id",
+                    "data_type": "string"
+                },
+
+
+                {
+                    "data_path": "action_result.data.*.readable_summary.classification.classification",
+                    "data_type": "string"
+                },
+                {
+                    "data_path": "action_result.data.*.readable_summary.classification.description",
+                    "data_type": "string"
+                },
+                {
+                    "data_path": "action_result.data.*.readable_summary.classification.reason",
+                    "data_type": "string"
+                },
+                {
+                    "data_path": "action_result.data.*.readable_summary.classification.threat.name",
+                    "data_type": "string"
+                },
+                {
+                    "data_path": "action_result.data.*.readable_summary.classification.threat.description",
+                    "data_type": "string"
+                },
+                {
+                    "data_path": "action_result.data.*.readable_summary.classification.threat.factor",
+                    "data_type": "numeric"
+                }
+            ],
+            "versions": "EQ(*)",
+            "render": {
+                "type": "custom",
+                "width": 10,
+                "height": 5,
+                "view": "reversinglabs_view.hunting_visualization",
+                "title": "FILE REPUTATION"
+            }
+        },
+        {
+            "action": "advanced search",
+            "description": "Queries ReversingLabs Advanced Search with specified search query.",
+            "type": "investigate",
+            "identifier": "adv_search",
+            "read_only": true,
+            "lock": {
+                "enabled": false,
+                "data_path": "parameters.hunting_report_vault_id"
+            },
+            "parameters": {
+                "search_parameter": {
+                    "description": "RL Advanced Search query search field.",
+                    "data_type": "string",
+                    "order": 0,
+                    "required": false
+                },
+                "results_per_page": {
+                    "description": "Number of results per one page - default:1000",
+                    "data_type": "string",
+                    "order": 1,
+                    "required": false
+                },
+                "page_number": {
+                    "description": "Page number - default:1",
+                    "data_type": "string",
+                    "order": 2,
+                    "required": false
+                },
+                "hunting_report_vault_id": {
+                    "description": "Threat hunting report vault id",
+                    "data_type": "string",
+                    "order": 3,
+                    "required": false
+                }
+            },
+            "output": [
+                {
+                    "data_path": "action_result.data",
+                    "data_type": "string"
+                },
+                {
+                    "data_path": "action_result.status",
+                    "data_type": "string"
+                },
+                {
+                    "data_path": "action_result.message",
+                    "data_type": "string"
+                },
+                {
+                    "data_path": "action_result.summary",
+                    "data_type": "string"
+                },
+                {
+                    "data_path": "action_result.parameter.search_parameter",
+                    "data_type": "string"
+                },
+                {
+                    "data_path": "action_result.parameter.hunting_report_vault_id",
+                    "data_type": "string"
+                },
+                {
+                    "data_path": "action_result.data.*.hunting_report_vault_id",
+                    "data_type": "string"
+                },
+
+
+                {
+                    "data_path": "action_result.data.*.readable_summary.classification.classification",
+                    "data_type": "string"
+                },
+                {
+                    "data_path": "action_result.data.*.readable_summary.classification.description",
+                    "data_type": "string"
+                },
+                {
+                    "data_path": "action_result.data.*.readable_summary.classification.reason",
+                    "data_type": "string"
+                },
+                {
+                    "data_path": "action_result.data.*.readable_summary.classification.threat.name",
+                    "data_type": "string"
+                },
+                {
+                    "data_path": "action_result.data.*.readable_summary.classification.threat.description",
+                    "data_type": "string"
+                },
+                {
+                    "data_path": "action_result.data.*.readable_summary.classification.threat.factor",
+                    "data_type": "numeric"
+                }
+            ],
+            "versions": "EQ(*)",
+            "render": {
+                "type": "custom",
+                "width": 10,
+                "height": 5,
+                "view": "reversinglabs_view.hunting_visualization",
+                "title": "FILE REPUTATION"
+            }
+        },
+        {
+            "action": "file similarity analytics",
+            "description": "Queries ReversingLabs file similarity analytics for the specified file.",
+            "type": "investigate",
+            "identifier": "file_similarity",
+            "read_only": true,
+            "lock": {
+                "enabled": false,
+                "data_path": "parameters.hunting_report_vault_id"
+            },
+            "parameters": {
+                "hash": {
+                    "description": "File SHA1 hash value.",
+                    "data_type": "string",
+                    "order": 0,
+                    "required": false
+                },
+                "sample_type": {
+                    "description": "RL TitaniumCore sample type.",
+                    "data_type": "string",
+                    "order": 1,
+                    "required": false,
+                    "example_values": [
+                        "PE/Exe",
+                        "PE+/Dll",
+                        "MachO32 Little/Exe",
+                        "ELF32 Big/SO"
+                    ]
+                },
+                "hunting_report_vault_id": {
+                    "description": "Threat hunting report that represents current state of the hunting workflow.",
+                    "data_type": "string",
+                    "order": 2,
+                    "required": false
+                }
+            },
+            "output": [
+                {
+                    "data_path": "action_result.data",
+                    "data_type": "string"
+                },
+                {
+                    "data_path": "action_result.summary",
+                    "data_type": "string"
+                },
+                {
+                    "data_path": "action_result.status",
+                    "data_type": "string"
+                },
+                {
+                    "data_path": "action_result.message",
+                    "data_type": "string"
+                },
+                {
+                    "data_path": "action_result.parameter.hash",
+                    "data_type": "string"
+                },
+                {
+                    "data_path": "action_result.parameter.sample_type",
+                    "data_type": "string"
+                },
+                {
+                    "data_path": "action_result.parameter.hunting_report_vault_id",
+                    "data_type": "string"
+                },
+                {
+                    "data_path": "action_result.data.*.hunting_report_vault_id",
+                    "data_type": "string"
+                },
+
+
+                {
+                    "data_path": "action_result.data.*.readable_summary.classification.classification",
+                    "data_type": "string"
+                },
+                {
+                    "data_path": "action_result.data.*.readable_summary.classification.description",
+                    "data_type": "string"
+                },
+                {
+                    "data_path": "action_result.data.*.readable_summary.classification.reason",
+                    "data_type": "string"
+                },
+                {
+                    "data_path": "action_result.data.*.readable_summary.classification.threat.name",
+                    "data_type": "string"
+                },
+                {
+                    "data_path": "action_result.data.*.readable_summary.classification.threat.description",
+                    "data_type": "string"
+                },
+                {
+                    "data_path": "action_result.data.*.readable_summary.classification.threat.factor",
+                    "data_type": "numeric"
+                }
+            ],
+            "versions": "EQ(*)",
+            "render": {
+                "type": "custom",
+                "width": 10,
+                "height": 5,
+                "view": "reversinglabs_view.hunting_visualization",
+                "title": "FILE REPUTATION"
+            }
+        },
+        {
+            "action": "uri statistics",
+            "description": "Queries ReversingLabs uri statistics for the specified uri.",
+            "type": "investigate",
+            "identifier": "uri_statistics",
+            "read_only": true,
+            "lock": {
+                "enabled": false,
+                "data_path": "parameters.hunting_report_vault_id"
+            },
+            "parameters": {
+                "uri": {
+                    "description": "URI value that will get queried. Can be: url, domain, email address or ip address.",
+                    "data_type": "string",
+                    "order": 0,
+                    "required": false,
+                    "example_values": [
+                        "google.com",
+                        "127.0.0.1",
+                        "support@reversinglabs.com",
+                        "https://www.reversinglabs.com/company/about-us"
+                    ]
+                },
+                "hunting_report_vault_id": {
+                    "description": "Threat hunting report that represent current state of the hunting workflow",
+                    "data_type": "string",
+                    "order": 1,
+                    "required": false
+                }
+            },
+            "output": [
+                {
+                    "data_path": "action_result.data",
+                    "data_type": "string"
+                },
+                {
+                    "data_path": "action_result.summary",
+                    "data_type": "string"
+                },
+                {
+                    "data_path": "action_result.status",
+                    "data_type": "string"
+                },
+                {
+                    "data_path": "action_result.message",
+                    "data_type": "string"
+                },
+                {
+                    "data_path": "action_result.parameter.uri",
+                    "data_type": "string"
+                },
+                {
+                    "data_path": "action_result.parameter.hunting_report_vault_id",
+                    "data_type": "string"
+                },
+                {
+                    "data_path": "action_result.data.*.hunting_report_vault_id",
+                    "data_type": "string"
+                },
+
+
+                {
+                    "data_path": "action_result.data.*.readable_summary.classification.classification",
+                    "data_type": "string"
+                },
+                {
+                    "data_path": "action_result.data.*.readable_summary.classification.description",
+                    "data_type": "string"
+                },
+                {
+                    "data_path": "action_result.data.*.readable_summary.classification.reason",
+                    "data_type": "string"
+                },
+                {
+                    "data_path": "action_result.data.*.readable_summary.classification.threat.name",
+                    "data_type": "string"
+                },
+                {
+                    "data_path": "action_result.data.*.readable_summary.classification.threat.description",
+                    "data_type": "string"
+                },
+                {
+                    "data_path": "action_result.data.*.readable_summary.classification.threat.factor",
+                    "data_type": "numeric"
+                }
+            ],
+            "versions": "EQ(*)",
+            "render": {
+                "type": "custom",
+                "width": 10,
+                "height": 5,
+                "view": "reversinglabs_view.hunting_visualization",
+                "title": "FILE REPUTATION"
+            }
+        },
+        {
+            "action": "certificate analytics",
+            "description": "Queries ReversingLabs certificate analytics for the specified certificate thumbprint.",
+            "type": "investigate",
+            "identifier": "certificate_analytics",
+            "read_only": true,
+            "lock": {
+                "enabled": false,
+                "data_path": "parameters.hunting_report_vault_id"
+            },
+            "parameters": {
+                "thumbprint": {
+                    "description": "Certificate thumbprint that will get queried. Can be: url, domain, email address or ip address.",
+                    "data_type": "string",
+                    "order": 0,
+                    "required": false,
+                    "example_values": [
+                        "86900d438047f6d00ace379c6e68a9461ba36acd152c9e82eddbe87b331f3e4a"
+                    ]
+                },
+                "hunting_report_vault_id": {
+                    "description": "Threat hunting report that represents current state of the hunting workflow.",
+                    "data_type": "string",
+                    "order": 1,
+                    "required": false
+                }
+            },
+            "output": [
+                {
+                    "data_path": "action_result.data",
+                    "data_type": "string"
+                },
+                {
+                    "data_path": "action_result.summary",
+                    "data_type": "string"
+                },
+                {
+                    "data_path": "action_result.status",
+                    "data_type": "string"
+                },
+                {
+                    "data_path": "action_result.message",
+                    "data_type": "string"
+                },
+                {
+                    "data_path": "action_result.parameter.thumbprint",
+                    "data_type": "string"
+                },
+                {
+                    "data_path": "action_result.parameter.hunting_report_vault_id",
+                    "data_type": "string"
+                },
+                {
+                    "data_path": "action_result.data.*.hunting_report_vault_id",
+                    "data_type": "string"
+                },
+
+
+                {
+                    "data_path": "action_result.data.*.readable_summary.classification.classification",
+                    "data_type": "string"
+                },
+                {
+                    "data_path": "action_result.data.*.readable_summary.classification.description",
+                    "data_type": "string"
+                },
+                {
+                    "data_path": "action_result.data.*.readable_summary.classification.reason",
+                    "data_type": "string"
+                },
+                {
+                    "data_path": "action_result.data.*.readable_summary.classification.threat.name",
+                    "data_type": "string"
+                },
+                {
+                    "data_path": "action_result.data.*.readable_summary.classification.threat.description",
+                    "data_type": "string"
+                },
+                {
+                    "data_path": "action_result.data.*.readable_summary.classification.threat.factor",
+                    "data_type": "numeric"
+                }
+            ],
+            "versions": "EQ(*)",
+            "render": {
+                "type": "custom",
+                "width": 10,
+                "height": 5,
+                "view": "reversinglabs_view.hunting_visualization",
+                "title": "FILE REPUTATION"
+            }
+        }
+    ]
+}

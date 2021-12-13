@@ -1,6 +1,7 @@
 # --
+# File: ./reversinglabs/reversinglabs_view.py
 #
-# Copyright (c) ReversingLabs Inc 2016-2019
+# Copyright (c) ReversingLabs Inc 2016-2018
 #
 # This unpublished material is proprietary to ReversingLabs Inc.
 # All rights reserved.
@@ -10,94 +11,56 @@
 #
 # --
 
-from reversinglabs_consts import *
-from phantom.json_keys import *
 
-
-def file_reputation(provides, all_results, context):
-
-    tally = {'total_positives': 0,
-            'total_found': 0,
-            'total_queried': 0}
+def hunting_visualization(provides, all_results, context):
 
     results = []
     parameters = {}
     for summary, action_results in all_results:
-        # print "summary " + str(summary) + " action_results " + str(action_results)
         if not summary or not action_results:
             continue
-        tally['total_positives'] += int(summary.get(REVERSINGLABS_JSON_TOTAL_POSITIVES, 0))
-        tally['total_found'] += int(summary.get(APP_JSON_TOTAL_OBJECTS_SUCCESS, 0))
-        tally['total_queried'] += int(summary.get(APP_JSON_TOTAL_OBJECTS_TO_ACT_ON, 0))
-        for result in action_results:
-            res = {}
-            parameter = result.get_param()
-            result_summary = result.get_summary()
-            # print "summary " + str(result_summary) + " action_results " + str(parameter)
-            for dataelem in result.get_data():
-                print str(dataelem) + "\n\n\n"
-                if 'status' in dataelem:
-                    print "status: " + dataelem['status']
-                    res['status'] = dataelem['status']
-                else:
-                    res['status'] = 'Unknown'
-                if 'first_seen_on' in dataelem:
-                    print "first_seen_on: " + dataelem['first_seen_on']
-                    res['first_seen_on'] = dataelem['first_seen_on']
-                else:
-                    res['first_seen_on'] = ' Not found '
-                if 'last_seen_on' in dataelem:
-                    print "last_seen_on: " + dataelem['last_seen_on']
-                    res['last_seen_on'] = dataelem['last_seen_on']
-                else:
-                    res['last_seen_on'] = ' Not found '
-                if 'sample_type' in dataelem:
-                    print "sample_type: " + dataelem['sample_type']
-                    res['sample_type'] = dataelem['sample_type']
-                else:
-                    res['sample_type'] = ' Not Available '
-                if 'sample_size' in dataelem:
-                    print "sample_size: " + str(dataelem['sample_size'])
-                    res['sample_size'] = dataelem['sample_size']
-                else:
-                    res['sample_size'] = 'Not Available'
 
-                res['threat_name'] = 'Not Available'
-                res['trust_factor'] = 'Not Available'
-                res['threat_level'] = 'Not Available'
+        for action_result in action_results:
 
-                if 'mwp_result' in dataelem:
-                    res['mwp_result'] = dataelem['mwp_result']
-                    print "Found mwp result " + str(res['mwp_result'])
-                    if 'classification' in dataelem['mwp_result']:
-                        res['classification'] = dataelem['mwp_result']['classification']
-                    if 'threat_name' in res['mwp_result']:
-                        res['threat_name'] = res['mwp_result']['threat_name']
-                    if 'trust_factor' in res['mwp_result']:
-                        res['trust_factor'] = res['mwp_result']['trust_factor']
-                    if 'threat_level' in res['mwp_result']:
-                        res['threat_level'] = res['mwp_result']['threat_level']
-                    print str(res)
-                else:
-                    res['classification'] = 'Unknown'
-                if 'mwp_result' in res and result_summary.get(REVERSINGLABS_JSON_TOTAL_SCANS, 0) == 0:
-                    print "no XREF "
-                    results.append((parameter.get(APP_JSON_HASH, '').lower(),
-                        res.get('mwp_result', {}).get('scanner_match', 0),
-                        res.get('mwp_result', {}).get('scanner_count', 0), res))
-                else:
-                    results.append((parameter.get(APP_JSON_HASH, '').lower(), result_summary.get(REVERSINGLABS_JSON_POSITIVES, 0),
-                                    result_summary.get(REVERSINGLABS_JSON_TOTAL_SCANS, 0), res))
-        print("results " + str(results) + " \n*********************************")
-    if tally['total_queried']:
-        percentage = int((tally['total_positives'] / float(tally['total_queried'])) * 100)
-    else:
-        percentage = 0
-    parameters['percentage'] = percentage
-    parameters['result_summary'] = [('Queried', [tally['total_queried']]), ('Found', [tally['total_found']]),
-            ('Detected', [tally['total_positives']]), ('Detection ratio', [percentage]), ]
+            data = action_result.get_data()
+            if not data:
+                continue
 
-    parameters['additional_text'] = '{percentage}% detection ratio'.format(**parameters)
+            for item in data:
+                readable_summary = item.get('readable_summary')
+                cloud_hunting = item.get('cloud_hunting')
+                local_hunting = item.get('local_hunting')
+                if readable_summary:
+                    parameters['readable_summary'] = readable_summary
+
+                if cloud_hunting:
+                    complete, unresolved, status = organise_data_for_frontend(cloud_hunting)
+
+                    parameters['cloud_complete']        = complete
+                    parameters['cloud_unresolved']      = unresolved
+                    parameters['cloud_unresolved_name'] = status
+
+                if local_hunting:
+                    complete, unresolved, status = organise_data_for_frontend(local_hunting)
+
+                    parameters['local_complete']        = complete
+                    parameters['local_unresolved']      = unresolved
+                    parameters['local_unresolved_name'] = status
+
+    classification = parameters['readable_summary']['classification']['classification']
+    parameters['readable_summary']['classification']['classification'] = classification.upper()
+    description = parameters['readable_summary']['classification']['description']
+    parameters['readable_summary']['classification']['description'] = description.title()
+    parameters['readable_summary']['attack'] = parameters['readable_summary']['att&ck']
+
+    for index in range(len(parameters['readable_summary']['attack'])):
+        parameters['readable_summary']['attack'][index]['first'] = index == 0
+        parameters['readable_summary']['attack'][index]['index'] = str(index)
+
+    for hunting_key, parameters_key in [('cloud_hunting', 'reordered_cloud_hunting'),
+                                        ('local_hunting', 'reordered_local_hunting')]:
+        if parameters['readable_summary'][hunting_key]:
+            parameters['readable_summary'][parameters_key] = _get_hunting_execution_stats(parameters['readable_summary'][hunting_key])
 
     context['parameters'] = parameters
     context['results'] = results
@@ -105,3 +68,68 @@ def file_reputation(provides, all_results, context):
     context['body_color'] = '#0F75BC'
     context['title_color'] = 'white'
     return 'reversinglabs_template.html'
+
+
+def organise_data_for_frontend(cloud_hunting):
+    complete   = {}
+    unresolved = {}
+    status = 'Unresolved'
+
+    for element in cloud_hunting:
+        query = element.get('query')
+        if not query:
+            continue
+
+        query_status = query.get('status')
+        if query_status == 'pending' or query_status == 'skipped':
+            query_collection = unresolved
+            status = query_status.title()
+
+        elif query_status == 'completed':
+            query_collection        = complete
+            query['malicious']      = element.get('malicious')
+            query['description']    = element.get('description').title()
+            query['classification'] = element.get('classification').upper()
+
+        else:
+            continue
+
+        query_type = query.get('type')
+        if query_type == 'search (informative)':
+            query_type = 'search_informative'
+
+        data = query_collection.get(query_type)
+        if data:
+            query_terms = data.get('query_terms')
+            if len(query_terms) == 5:
+                continue
+            query_terms.append(query)
+            data['query_terms'] = query_terms
+
+        else:
+            readable_type = ' '.join(query_type.split('_')).title()
+            query_collection[query_type] = {
+                'query_type' : readable_type,
+                'query_id'   : query_type,
+                'query_terms': [query]
+            }
+
+    return complete.values(), unresolved.values(), status
+
+
+def _get_hunting_execution_stats(hunting_meta_stats):
+    stats_fields = {
+        "pending"   : [],
+        "skipped"   : [],
+        "completed" : [],
+        "failed"    : [],
+        "categories": [],
+    }
+
+    for category, values in hunting_meta_stats.iteritems():
+        readable_category = ' '.join(category.split('_'))
+        stats_fields['categories'].append(readable_category)
+        for key, value in values.items():
+            stats_fields[key].append(value)
+
+    return stats_fields
