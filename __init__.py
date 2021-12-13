@@ -1,7 +1,7 @@
 # --
 # File: __init__.py
 #
-# Copyright (c) ReversingLabs Inc 2016-2019
+# Copyright (c) ReversingLabs Inc 2016-2020
 #
 # This unpublished material is proprietary to ReversingLabs Inc.
 # All rights reserved.
