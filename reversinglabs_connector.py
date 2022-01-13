@@ -165,6 +165,7 @@ class ReversinglabsConnector(BaseConnector):
         post_data = {'query': search_term, 'format': 'json', 'page': page_number or 1,
             'records_per_page': results_per_page or MAX_SEARCH_RESULTS}
         response = requests.post(self._search_url,
+                                  timeout=10,
                                   data=json.dumps(post_data),
                                   auth=self._auth, headers=self._headers, verify=self._verify_cert)
 
@@ -253,6 +254,7 @@ class ReversinglabsConnector(BaseConnector):
     def _make_file_similarity_post_api_request(self, rha1_type, hashes):
         post_data = {'rl': {'query': {'rha1_type': rha1_type, 'extended': 'true', 'response_format': 'json', 'hashes': hashes}}}
         response = requests.post(self._rha1_url,
+                                  timeout=10,
                                   data=json.dumps(post_data),
                                   auth=self._auth, headers=self._headers, verify=self._verify_cert)
 
@@ -300,7 +302,7 @@ class ReversinglabsConnector(BaseConnector):
     def _make_uri_statistics_api_request(self, uri_term):
         uri_sha1 = self._generate_sha1_hash(uri_term.encode('utf-8'))
         uri_request_url = self._uri_statistics_url.format(sha1=uri_sha1)
-        response = requests.get(uri_request_url, auth=self._auth, headers=self._headers, verify=self._verify_cert)
+        response = requests.get(uri_request_url, timeout=10, auth=self._auth, headers=self._headers, verify=self._verify_cert)
 
         if response.ok:
             return response.json()
@@ -348,6 +350,7 @@ class ReversinglabsConnector(BaseConnector):
     def _make_certificate_analytics_api_request(self, thumpbrints):
         post_data = {'rl': {'query': {'thumbprints': thumpbrints, 'format': 'json'}}}
         response = requests.post(self._cert_analytics_url,
+                                 timeout=10,
                                  data=json.dumps(post_data),
                                  auth=self._auth, headers=self._headers, verify=self._verify_cert)
 
@@ -373,7 +376,7 @@ class ReversinglabsConnector(BaseConnector):
         self.save_progress(REVERSINGLABS_GENERATED_RANDOM_HASH)
 
         query = {'rl': {'query': {'hash_type': 'sha1', 'hashes': [sha1_hash]}}}
-        response = requests.post(self._mwp_url, auth=self._auth, json=query,
+        response = requests.post(self._mwp_url, auth=self._auth, json=query, timeout=10,
                                  headers=self._headers, verify=self._verify_cert)
 
         if not response.ok:
@@ -463,6 +466,7 @@ class ReversinglabsConnector(BaseConnector):
     def _make_file_reputation_api_request(self, hash_type, hashes):
         post_data = {'rl': {'query': {'hash_type': hash_type, 'hashes': hashes}}}
         response = requests.post(self._mwp_url,
+                                  timeout=10,
                                   data=json.dumps(post_data),
                                   auth=self._auth, headers=self._headers, verify=self._verify_cert)
 
