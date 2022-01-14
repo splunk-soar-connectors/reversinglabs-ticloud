@@ -84,7 +84,7 @@
             "data_type": "boolean",
             "description": "Verify server certificate",
             "required": true,
-            "order": 1,
+            "order": 3,
             "default": true
         }
     },
@@ -166,6 +166,14 @@
                 },
                 {
                     "data_path": "action_result.data.*.readable_summary.classification.threat.factor",
+                    "data_type": "numeric"
+                },
+                {
+                    "data_path": "summary.total_objects",
+                    "data_type": "numeric"
+                },
+                {
+                    "data_path": "summary.total_objects_successful",
                     "data_type": "numeric"
                 }
             ],
@@ -269,6 +277,14 @@
                 {
                     "data_path": "action_result.data.*.readable_summary.classification.threat.factor",
                     "data_type": "numeric"
+                },
+                {
+                    "data_path": "summary.total_objects",
+                    "data_type": "numeric"
+                },
+                {
+                    "data_path": "summary.total_objects_successful",
+                    "data_type": "numeric"
                 }
             ],
             "versions": "EQ(*)",
@@ -370,6 +386,14 @@
                 {
                     "data_path": "action_result.data.*.readable_summary.classification.threat.factor",
                     "data_type": "numeric"
+                },
+                {
+                    "data_path": "summary.total_objects",
+                    "data_type": "numeric"
+                },
+                {
+                    "data_path": "summary.total_objects_successful",
+                    "data_type": "numeric"
                 }
             ],
             "versions": "EQ(*)",
@@ -450,8 +474,6 @@
                     "data_path": "action_result.data.*.hunting_report_vault_id",
                     "data_type": "string"
                 },
-
-
                 {
                     "data_path": "action_result.data.*.readable_summary.classification.classification",
                     "data_type": "string"
@@ -474,6 +496,14 @@
                 },
                 {
                     "data_path": "action_result.data.*.readable_summary.classification.threat.factor",
+                    "data_type": "numeric"
+                },
+                {
+                    "data_path": "summary.total_objects",
+                    "data_type": "numeric"
+                },
+                {
+                    "data_path": "summary.total_objects_successful",
                     "data_type": "numeric"
                 }
             ],
@@ -545,8 +575,6 @@
                     "data_path": "action_result.data.*.hunting_report_vault_id",
                     "data_type": "string"
                 },
-
-
                 {
                     "data_path": "action_result.data.*.readable_summary.classification.classification",
                     "data_type": "string"
@@ -569,6 +597,14 @@
                 },
                 {
                     "data_path": "action_result.data.*.readable_summary.classification.threat.factor",
+                    "data_type": "numeric"
+                },
+                {
+                    "data_path": "summary.total_objects",
+                    "data_type": "numeric"
+                },
+                {
+                    "data_path": "summary.total_objects_successful",
                     "data_type": "numeric"
                 }
             ],
@@ -637,8 +673,6 @@
                     "data_path": "action_result.data.*.hunting_report_vault_id",
                     "data_type": "string"
                 },
-
-
                 {
                     "data_path": "action_result.data.*.readable_summary.classification.classification",
                     "data_type": "string"
@@ -661,6 +695,14 @@
                 },
                 {
                     "data_path": "action_result.data.*.readable_summary.classification.threat.factor",
+                    "data_type": "numeric"
+                },
+                {
+                    "data_path": "summary.total_objects",
+                    "data_type": "numeric"
+                },
+                {
+                    "data_path": "summary.total_objects_successful",
                     "data_type": "numeric"
                 }
             ],
