@@ -1,5 +1,5 @@
 {
-    "appid": "b2ea15f8-9daa-45f8-a5e3-324b612e85ef",
+    "appid": "e18b3f04-9a18-4226-8060-b85b123c6aae",
     "name": "RL TitaniumCloud REST APIs",
     "package_name": "phantom_titaniumcloud",
     "description": "This app integrates with ReversingLabs cloud services to implement reputation and investigative actions for file samples and their metadata",
@@ -91,7 +91,7 @@
     "actions": [
         {
             "action": "joe sandbox adapter",
-            "description": "ReversingLabs plug-in for Joe Sandbox which will update threat hunting metadata with dynamic analysis results.",
+            "description": "ReversingLabs plug-in for Joe Sandbox which will update threat hunting metadata with dynamic analysis results",
             "type": "investigate",
             "identifier": "add_joe_results",
             "read_only": true,
@@ -298,7 +298,7 @@
         },
         {
             "action": "advanced search",
-            "description": "Queries ReversingLabs Advanced Search with specified search query.",
+            "description": "Queries ReversingLabs Advanced Search with specified search query",
             "type": "investigate",
             "identifier": "adv_search",
             "read_only": true,
@@ -308,7 +308,7 @@
             },
             "parameters": {
                 "search_parameter": {
-                    "description": "RL Advanced Search query search field.",
+                    "description": "RL Advanced Search query search field",
                     "data_type": "string",
                     "order": 0,
                     "required": false
@@ -407,7 +407,7 @@
         },
         {
             "action": "file similarity analytics",
-            "description": "Queries ReversingLabs file similarity analytics for the specified file.",
+            "description": "Queries ReversingLabs file similarity analytics for the specified file",
             "type": "investigate",
             "identifier": "file_similarity",
             "read_only": true,
@@ -417,13 +417,13 @@
             },
             "parameters": {
                 "hash": {
-                    "description": "File SHA1 hash value.",
+                    "description": "File SHA1 hash value",
                     "data_type": "string",
                     "order": 0,
                     "required": false
                 },
                 "sample_type": {
-                    "description": "RL TitaniumCore sample type.",
+                    "description": "RL TitaniumCore sample type",
                     "data_type": "string",
                     "order": 1,
                     "required": false,
@@ -435,7 +435,7 @@
                     ]
                 },
                 "hunting_report_vault_id": {
-                    "description": "Threat hunting report that represents current state of the hunting workflow.",
+                    "description": "Threat hunting report that represents current state of the hunting workflow",
                     "data_type": "string",
                     "order": 2,
                     "required": false
@@ -518,7 +518,7 @@
         },
         {
             "action": "uri statistics",
-            "description": "Queries ReversingLabs uri statistics for the specified uri.",
+            "description": "Queries ReversingLabs uri statistics for the specified uri",
             "type": "investigate",
             "identifier": "uri_statistics",
             "read_only": true,
@@ -528,7 +528,7 @@
             },
             "parameters": {
                 "uri": {
-                    "description": "URI value that will get queried. Can be: url, domain, email address or ip address.",
+                    "description": "URI value that will get queried. Can be: url, domain, email address or ip address",
                     "data_type": "string",
                     "order": 0,
                     "required": false,
@@ -619,7 +619,7 @@
         },
         {
             "action": "certificate analytics",
-            "description": "Queries ReversingLabs certificate analytics for the specified certificate thumbprint.",
+            "description": "Queries ReversingLabs certificate analytics for the specified certificate thumbprint",
             "type": "investigate",
             "identifier": "certificate_analytics",
             "read_only": true,
@@ -629,7 +629,7 @@
             },
             "parameters": {
                 "thumbprint": {
-                    "description": "Certificate thumbprint that will get queried. Can be: url, domain, email address or ip address.",
+                    "description": "Certificate thumbprint that will get queried. Can be: url, domain, email address or ip address",
                     "data_type": "string",
                     "order": 0,
                     "required": false,
@@ -638,7 +638,7 @@
                     ]
                 },
                 "hunting_report_vault_id": {
-                    "description": "Threat hunting report that represents current state of the hunting workflow.",
+                    "description": "Threat hunting report that represents current state of the hunting workflow",
                     "data_type": "string",
                     "order": 1,
                     "required": false
