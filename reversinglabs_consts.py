@@ -1,4 +1,4 @@
-# File: reversinglabs_view.py
+# File: reversinglabs_const.py
 #
 # Copyright (c) 2016-2022 Splunk Inc.
 #
