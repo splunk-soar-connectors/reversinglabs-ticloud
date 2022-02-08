@@ -16,7 +16,7 @@ Malware samples are continually reanalyzed to ensure that the reputation informa
 <br/><br/>
 In addition to file reputation and historical AV reputation, additional Threat Intelligence can be obtained from TitaniumCloud via multiple APIs and Feeds, which allow users to search for files by hash or anti-virus detection name. It is also possible to hunt for files from a single malware family, search for functionally similar samples, perform bulk queries, and receive alerts on file reputation changes.
 <br/><br/>
-For more information, consult the <a href="https://www.reversinglabs.com/products/file-reputation-service.html"> official product website.</a>
+For more information, consult the <a href="https://www.reversinglabs.com/products/file-reputation-service.html" target="_blank"> official product website.</a>
 </p>
 <h2>How to Configure the App</h2>
 <p>
@@ -29,7 +29,27 @@ Input the username and password required to connect to ReversingLabs TitaniumClo
 Select the "Verify server certificate" checkbox to ensure that the self-signed certificates are not accepted.
 </p>
 
-
+<h2>Port Information</h2>
+      <p>
+          The app uses HTTP/ HTTPS protocol for communicating with the RL TitaniumCloud REST APIs server. Below are the default ports used by the Splunk SOAR Connector.
+          <table>
+              <tr class=plain>
+                  <th>SERVICE NAME</th>
+                  <th>TRANSPORT PROTOCOL</th>
+                  <th>PORT</th>
+              </tr>
+              <tr>
+                  <td>http</td>
+                  <td>tcp</td>
+                  <td>80</td>
+              </tr>
+              <tr>
+                  <td>https</td>
+                  <td>tcp</td>
+                  <td>443</td>
+              </tr>
+          </table>
+      </p>
 
 
 </body>

@@ -62,3 +62,13 @@ URI_STATISTICS_API_URL = '/api/uri/statistics/uri_state/sha1/{sha1}?format=json'
 CERTIFICATE_ANALYTICS_URL = '/api/certificate/analytics/v1/query/thumbprint/json'
 
 URI_ANALYTICS_EMPTY_COUNTERS = {'known': 0, 'malicious': 0, 'suspicious': 0}
+
+# Constants relating to '_get_error_message_from_exception'
+ERR_MSG_UNAVAILABLE = "Error message unavailable. Please check the asset configuration and|or action parameters"
+
+# Constants relating to '_validate_integer'
+VALID_INTEGER_MSG = "Please provide a valid integer value in the {}"
+NON_NEGATIVE_INTEGER_MSG = "Please provide a valid non-negative integer value in the {}"
+POSITIVE_INTEGER_MSG = "Please provide a valid non-zero positive integer value in the {}"
+PAGE_NUMBER_KEY = "'page_number' action parameter"
+RESULTS_PER_PAGE_KEY = "'results_per_page' action parameter"
