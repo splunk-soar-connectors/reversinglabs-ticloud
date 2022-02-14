@@ -132,19 +132,19 @@ class ReversinglabsConnector(BaseConnector):
         if parameter is not None:
             try:
                 if not float(parameter).is_integer():
-                    return action_result.set_status(phantom.APP_ERROR, VALID_INTEGER_MSG.format(key)), None
+                    raise Exception(VALID_INTEGER_MSG.format(key))
 
                 parameter = int(parameter)
             except Exception:
-                return action_result.set_status(phantom.APP_ERROR, VALID_INTEGER_MSG.format(key)), None
+                raise Exception(VALID_INTEGER_MSG.format(key))
 
             if parameter < 0:
-                return action_result.set_status(phantom.APP_ERROR, NON_NEGATIVE_INTEGER_MSG.format(key)), None
+                raise Exception(NON_NEGATIVE_INTEGER_MSG.format(key))
 
             if not allow_zero and parameter == 0:
-                return action_result.set_status(phantom.APP_ERROR, POSITIVE_INTEGER_MSG.format(key)), None
+                raise Exception(POSITIVE_INTEGER_MSG.format(key))
 
-        return phantom.APP_SUCCESS, parameter
+        return parameter
 
     def handle_action(self, param):
         action_id = self.get_action_identifier()
@@ -169,12 +169,8 @@ class ReversinglabsConnector(BaseConnector):
     def action_advanced_search(self, action_result, param):
         hunting_report, vault_id = self._get_threat_hunting_state(param)
         single_search_term = param.get(REVERSINGLABS_JSON_ADVANCED_SEARCH)
-        ret_val, results_per_page = self._validate_integer(action_result, param.get("results_per_page"), RESULTS_PER_PAGE_KEY)
-        if phantom.is_fail(ret_val):
-            return action_result.get_status()
-        ret_val, page_number = self._validate_integer(action_result, param.get("page_number"), PAGE_NUMBER_KEY)
-        if phantom.is_fail(ret_val):
-            return action_result.get_status()
+        results_per_page = self._validate_integer(action_result, param.get("results_per_page"), RESULTS_PER_PAGE_KEY)
+        page_number = self._validate_integer(action_result, param.get("page_number"), PAGE_NUMBER_KEY)
 
         if hunting_report:
             self._hunting_with_advanced_search(action_result, hunting_report, vault_id, results_per_page, page_number)
@@ -255,13 +251,15 @@ class ReversinglabsConnector(BaseConnector):
         if not sha1_value and not sample_type:
             return None, None
 
-        if not phantom.is_sha1(sha1_value):
+        if sha1_value and not phantom.is_sha1(sha1_value):
             raise ApplicationExecutionFailed('Provided file hash must be SHA1.')
 
-        rha1_type = self._get_rha1_type(sample_type)
-        if not rha1_type:
-            raise ApplicationExecutionFailed(
-                'Invalid file type for RHA1 analytics. Only PE, ELF and MachO files are supported')
+        rha1_type = None
+        if sample_type:
+            rha1_type = self._get_rha1_type(sample_type)
+            if not rha1_type:
+                raise ApplicationExecutionFailed(
+                    'Invalid file type for RHA1 analytics. Only PE, ELF and MachO files are supported')
 
         return sha1_value, rha1_type
 
@@ -443,16 +441,16 @@ class ReversinglabsConnector(BaseConnector):
                                  headers=self._headers, verify=self._verify_cert)
 
         if not response.ok:
-            self.set_status(phantom.APP_ERROR)
+            action_result.set_status(phantom.APP_ERROR)
             status_message = '{0}. {1}. HTTP status_code: {2}, reason: {3}'.format(
                 REVERSINGLABS_ERR_CONNECTIVITY_TEST, REVERSINGLABS_MSG_CHECK_CREDENTIALS,
                 response.status_code, response.reason
             )
-            self.append_to_message(status_message)
-            self.append_to_message(self._mwp_url)
-            return self.get_status()
+            action_result.append_to_message(status_message)
+            action_result.append_to_message(self._mwp_url)
+            raise Exception(status_message)
 
-        self.set_status_save_progress(phantom.APP_SUCCESS, REVERSINGLABS_SUCC_CONNECTIVITY_TEST)
+        return action_result.set_status(phantom.APP_SUCCESS, REVERSINGLABS_SUCC_CONNECTIVITY_TEST)
 
     @classmethod
     def _generate_random_sha1_hash(cls):
@@ -461,7 +459,7 @@ class ReversinglabsConnector(BaseConnector):
 
     @staticmethod
     def _generate_sha1_hash(value):
-        sha1 = hashlib.sha1(value)
+        sha1 = hashlib.sha1(str(value).encode('utf-8'))
         return sha1.hexdigest()
 
     def action_file_reputation(self, action_result, param):
@@ -548,9 +546,11 @@ class ReversinglabsConnector(BaseConnector):
         joe_report = None
         if joe_report_vault_id:
             success, msg, files_array = ph_rules.vault_info(vault_id=joe_report_vault_id)
-            file_data = list(files_array)[0]
-            payload = open(file_data['path'], 'rb').read()
-            joe_report = json.loads(payload.decode('utf-8'))
+            if success:
+                file_data = list(files_array)[0]
+                with open(file_data['path'], 'rb') as f:
+                    payload = f.read()
+                joe_report = json.loads(payload.decode('utf-8'))
 
         if hunting_report:
             joe_sandbox.add_dynamic_analysis(hunting_report, joe_report)
@@ -588,9 +588,11 @@ class ReversinglabsConnector(BaseConnector):
         hunting_report_vault_id = parameters.get(REVERSINGLABS_JSON_HUNTING_REPORT)
         if hunting_report_vault_id:
             success, msg, files_array = ph_rules.vault_info(vault_id=hunting_report_vault_id)
-            file_data = list(files_array)[0]
-            payload = open(file_data['path'], 'rb').read()
-            return json.loads(payload.decode('utf-8')), hunting_report_vault_id
+            if success:
+                file_data = list(files_array)[0]
+                with open(file_data['path'], 'rb') as f:
+                    payload = f.read()
+                return json.loads(payload.decode('utf-8')), hunting_report_vault_id
 
         return None, None
 

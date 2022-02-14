@@ -29,16 +29,36 @@
                 "input_file": "wheels/shared/chardet-3.0.4-py2.py3-none-any.whl"
             },
             {
+                "module": "filelock",
+                "input_file": "wheels/py3/filelock-3.4.1-py3-none-any.whl"
+            },
+            {
                 "module": "idna",
                 "input_file": "wheels/shared/idna-2.10-py2.py3-none-any.whl"
+            },
+            {
+                "module": "python_rl_threat_hunting",
+                "input_file": "wheels/py3/python_rl_threat_hunting-1.588-py3-none-any.whl"
             },
             {
                 "module": "requests",
                 "input_file": "wheels/shared/requests-2.25.0-py2.py3-none-any.whl"
             },
             {
+                "module": "requests_file",
+                "input_file": "wheels/shared/requests_file-1.5.1-py2.py3-none-any.whl"
+            },
+            {
                 "module": "simplejson",
                 "input_file": "wheels/py36/simplejson-3.17.2-cp36-cp36m-manylinux2010_x86_64.manylinux_2_5_x86_64.manylinux1_x86_64.manylinux_2_17_x86_64.manylinux2014_x86_64.whl"
+            },
+            {
+                "module": "six",
+                "input_file": "wheels/shared/six-1.16.0-py2.py3-none-any.whl"
+            },
+            {
+                "module": "tldextract",
+                "input_file": "wheels/shared/tldextract-3.1.2-py2.py3-none-any.whl"
             },
             {
                 "module": "urllib3",
@@ -91,7 +111,8 @@
                 "hunting_report_vault_id": {
                     "description": "Threat hunting report vault id",
                     "data_type": "string",
-                    "order": 1
+                    "order": 1,
+                    "required": true
                 }
             },
             "output": [
@@ -153,11 +174,17 @@
                 },
                 {
                     "data_path": "summary.total_objects",
-                    "data_type": "numeric"
+                    "data_type": "numeric",
+                    "example_values": [
+                        1
+                    ]
                 },
                 {
                     "data_path": "summary.total_objects_successful",
-                    "data_type": "numeric"
+                    "data_type": "numeric",
+                    "example_values": [
+                        1
+                    ]
                 }
             ],
             "versions": "EQ(*)",
@@ -263,11 +290,17 @@
                 },
                 {
                     "data_path": "summary.total_objects",
-                    "data_type": "numeric"
+                    "data_type": "numeric",
+                    "example_values": [
+                        1
+                    ]
                 },
                 {
                     "data_path": "summary.total_objects_successful",
-                    "data_type": "numeric"
+                    "data_type": "numeric",
+                    "example_values": [
+                        1
+                    ]
                 }
             ],
             "versions": "EQ(*)",
@@ -378,11 +411,17 @@
                 },
                 {
                     "data_path": "summary.total_objects",
-                    "data_type": "numeric"
+                    "data_type": "numeric",
+                    "example_values": [
+                        1
+                    ]
                 },
                 {
                     "data_path": "summary.total_objects_successful",
-                    "data_type": "numeric"
+                    "data_type": "numeric",
+                    "example_values": [
+                        1
+                    ]
                 }
             ],
             "versions": "EQ(*)",
@@ -490,11 +529,17 @@
                 },
                 {
                     "data_path": "summary.total_objects",
-                    "data_type": "numeric"
+                    "data_type": "numeric",
+                    "example_values": [
+                        1
+                    ]
                 },
                 {
                     "data_path": "summary.total_objects_successful",
-                    "data_type": "numeric"
+                    "data_type": "numeric",
+                    "example_values": [
+                        1
+                    ]
                 }
             ],
             "versions": "EQ(*)",
@@ -593,11 +638,17 @@
                 },
                 {
                     "data_path": "summary.total_objects",
-                    "data_type": "numeric"
+                    "data_type": "numeric",
+                    "example_values": [
+                        1
+                    ]
                 },
                 {
                     "data_path": "summary.total_objects_successful",
-                    "data_type": "numeric"
+                    "data_type": "numeric",
+                    "example_values": [
+                        1
+                    ]
                 }
             ],
             "versions": "EQ(*)",
@@ -693,11 +744,17 @@
                 },
                 {
                     "data_path": "summary.total_objects",
-                    "data_type": "numeric"
+                    "data_type": "numeric",
+                    "example_values": [
+                        1
+                    ]
                 },
                 {
                     "data_path": "summary.total_objects_successful",
-                    "data_type": "numeric"
+                    "data_type": "numeric",
+                    "example_values": [
+                        1
+                    ]
                 }
             ],
             "versions": "EQ(*)",
@@ -721,16 +778,36 @@
                 "input_file": "wheels/shared/chardet-3.0.4-py2.py3-none-any.whl"
             },
             {
+                "module": "filelock",
+                "input_file": "wheels/py3/filelock-3.4.2-py3-none-any.whl"
+            },
+            {
                 "module": "idna",
                 "input_file": "wheels/shared/idna-2.10-py2.py3-none-any.whl"
+            },
+            {
+                "module": "python_rl_threat_hunting",
+                "input_file": "wheels/py3/python_rl_threat_hunting-1.588-py3-none-any.whl"
             },
             {
                 "module": "requests",
                 "input_file": "wheels/shared/requests-2.25.0-py2.py3-none-any.whl"
             },
             {
+                "module": "requests_file",
+                "input_file": "wheels/shared/requests_file-1.5.1-py2.py3-none-any.whl"
+            },
+            {
                 "module": "simplejson",
                 "input_file": "wheels/py39/simplejson-3.17.2-cp39-cp39-manylinux_2_5_x86_64.manylinux1_x86_64.manylinux_2_17_x86_64.manylinux2014_x86_64.whl"
+            },
+            {
+                "module": "six",
+                "input_file": "wheels/shared/six-1.16.0-py2.py3-none-any.whl"
+            },
+            {
+                "module": "tldextract",
+                "input_file": "wheels/shared/tldextract-3.1.2-py2.py3-none-any.whl"
             },
             {
                 "module": "urllib3",
