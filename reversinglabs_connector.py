@@ -77,7 +77,7 @@ class ReversinglabsConnector(BaseConnector):
         )
 
         if 'url' in config:
-            base_url = config['url']
+            base_url = config.get('url').rstrip('/')
             self._mwp_url = '{0}{1}'.format(base_url, MAL_PRESENCE_API_URL)
             self._xref_url = '{0}{1}'.format(base_url, XREF_API_URL)
             self._search_url = '{0}{1}'.format(base_url, ADVANCED_SEARCH_API_URL)
@@ -92,34 +92,7 @@ class ReversinglabsConnector(BaseConnector):
 
         return phantom.APP_SUCCESS
 
-    def _get_error_message_from_exception(self, e):
-        """
-        Get appropriate error message from the exception.
-        :param e: Exception object
-        :return: error message
-        """
-
-        error_code = None
-        error_msg = ERR_MSG_UNAVAILABLE
-
-        try:
-            if hasattr(e, "args"):
-                if len(e.args) > 1:
-                    error_code = e.args[0]
-                    error_msg = e.args[1]
-                elif len(e.args) == 1:
-                    error_msg = e.args[0]
-        except Exception:
-            pass
-
-        if not error_code:
-            error_text = "Error Message: {}".format(error_msg)
-        else:
-            error_text = "Error Code: {}. Error Message: {}".format(error_code, error_msg)
-
-        return error_text
-
-    def _validate_integer(self, action_result, parameter, key, allow_zero=False):
+    def _validate_integer(self, parameter, key, allow_zero=False):
         """ This method is to check if the provided input parameter value
         is a non-zero positive integer and returns the integer value of the parameter itself.
         :param action_result: Action result or BaseConnector object
@@ -158,8 +131,7 @@ class ReversinglabsConnector(BaseConnector):
         except requests.HTTPError as err:
             return action_result.set_status(phantom.APP_ERROR, 'Request to server failed. {}'.format(err))
         except Exception as err:
-            err_msg = self._get_error_message_from_exception(err)
-            return action_result.set_status(phantom.APP_ERROR, err_msg)
+            return action_result.set_status(phantom.APP_ERROR, str(err))
 
         if success_message:
             return action_result.set_status(phantom.APP_SUCCESS, success_message)
@@ -169,8 +141,8 @@ class ReversinglabsConnector(BaseConnector):
     def action_advanced_search(self, action_result, param):
         hunting_report, vault_id = self._get_threat_hunting_state(param)
         single_search_term = param.get(REVERSINGLABS_JSON_ADVANCED_SEARCH)
-        results_per_page = self._validate_integer(action_result, param.get("results_per_page"), RESULTS_PER_PAGE_KEY)
-        page_number = self._validate_integer(action_result, param.get("page_number"), PAGE_NUMBER_KEY)
+        results_per_page = self._validate_integer(param.get("results_per_page"), RESULTS_PER_PAGE_KEY)
+        page_number = self._validate_integer(param.get("page_number"), PAGE_NUMBER_KEY)
 
         if hunting_report:
             self._hunting_with_advanced_search(action_result, hunting_report, vault_id, results_per_page, page_number)
@@ -441,16 +413,14 @@ class ReversinglabsConnector(BaseConnector):
                                  headers=self._headers, verify=self._verify_cert)
 
         if not response.ok:
-            action_result.set_status(phantom.APP_ERROR)
             status_message = '{0}. {1}. HTTP status_code: {2}, reason: {3}'.format(
                 REVERSINGLABS_ERR_CONNECTIVITY_TEST, REVERSINGLABS_MSG_CHECK_CREDENTIALS,
                 response.status_code, response.reason
             )
-            action_result.append_to_message(status_message)
-            action_result.append_to_message(self._mwp_url)
+            self.save_progress("URL: {}".format(self._mwp_url))
             raise Exception(status_message)
 
-        return action_result.set_status(phantom.APP_SUCCESS, REVERSINGLABS_SUCC_CONNECTIVITY_TEST)
+        return REVERSINGLABS_SUCC_CONNECTIVITY_TEST
 
     @classmethod
     def _generate_random_sha1_hash(cls):
