@@ -1,6 +1,6 @@
-# File: reversinglabs_view.py
+# File: reversinglabs_ticloud_view.py
 #
-# Copyright (c) 2016-2022 Splunk Inc.
+# Copyright (c) ReversingLabs Inc 2016-2022
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -50,28 +50,31 @@ def hunting_visualization(provides, all_results, context):
                     parameters['local_unresolved'] = unresolved
                     parameters['local_unresolved_name'] = status
 
-    classification = parameters['readable_summary']['classification']['classification']
-    parameters['readable_summary']['classification']['classification'] = classification.upper()
-    description = parameters['readable_summary']['classification']['description']
-    parameters['readable_summary']['classification']['description'] = description.title()
-    parameters['readable_summary']['attack'] = parameters['readable_summary']['att&ck']
+    try:
+        classification = parameters['readable_summary']['classification']['classification']
+        parameters['readable_summary']['classification']['classification'] = classification.upper()
+        description = parameters['readable_summary']['classification']['description']
+        parameters['readable_summary']['classification']['description'] = description.title()
+        parameters['readable_summary']['attack'] = parameters['readable_summary']['att&ck']
 
-    for index in range(len(parameters['readable_summary']['attack'])):
-        parameters['readable_summary']['attack'][index]['first'] = index == 0
-        parameters['readable_summary']['attack'][index]['index'] = str(index)
+        for index in range(len(parameters['readable_summary']['attack'])):
+            parameters['readable_summary']['attack'][index]['first'] = index == 0
+            parameters['readable_summary']['attack'][index]['index'] = str(index)
 
-    for hunting_key, parameters_key in [('cloud_hunting', 'reordered_cloud_hunting'),
-                                        ('local_hunting', 'reordered_local_hunting')]:
-        if parameters['readable_summary'][hunting_key]:
-            parameters['readable_summary'][parameters_key] = _get_hunting_execution_stats(
-                parameters['readable_summary'][hunting_key])
+        for hunting_key, parameters_key in [('cloud_hunting', 'reordered_cloud_hunting'),
+                                            ('local_hunting', 'reordered_local_hunting')]:
+            if parameters['readable_summary'][hunting_key]:
+                parameters['readable_summary'][parameters_key] = _get_hunting_execution_stats(
+                    parameters['readable_summary'][hunting_key])
 
-    context['parameters'] = parameters
-    context['results'] = results
-    context['title_text_color'] = 'white'
-    context['body_color'] = '#0F75BC'
-    context['title_color'] = 'white'
-    return 'reversinglabs_template.html'
+        context['parameters'] = parameters
+        context['results'] = results
+        context['title_text_color'] = 'white'
+        context['body_color'] = '#0F75BC'
+        context['title_color'] = 'white'
+    except:
+        pass
+    return 'reversinglabs_ticloud_template.html'
 
 
 def organise_data_for_frontend(cloud_hunting):

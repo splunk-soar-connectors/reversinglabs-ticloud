@@ -1,6 +1,6 @@
-# File: reversinglabs_connector.py
+# File: reversinglabs_ticloud_connector.py
 #
-# Copyright (c) 2016-2022 Splunk Inc.
+# Copyright (c) ReversingLabs Inc 2016-2022
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -32,7 +32,7 @@ from rl_threat_hunting import cloud, constants, file_report, mwp_metadata_adapte
 from rl_threat_hunting.plugins import joe_sandbox
 
 # THIS Connector imports
-from reversinglabs_consts import *
+from reversinglabs_ticloud_consts import *
 
 
 class ReversinglabsConnector(BaseConnector):
@@ -144,12 +144,15 @@ class ReversinglabsConnector(BaseConnector):
         results_per_page = self._validate_integer(param.get("results_per_page"), RESULTS_PER_PAGE_KEY)
         page_number = self._validate_integer(param.get("page_number"), PAGE_NUMBER_KEY)
 
+        if not param.get(REVERSINGLABS_JSON_HUNTING_REPORT) and not single_search_term:
+            raise Exception("Parameters 'hunting report vault id' and 'search parameter' not provided. At least one is needed.")
+
         if hunting_report:
             self._hunting_with_advanced_search(action_result, hunting_report, vault_id, results_per_page, page_number)
         elif single_search_term:
             self._advanced_search_make_single_query(action_result, single_search_term, results_per_page, page_number)
         else:
-            raise ApplicationExecutionFailed('No parameters provided. At least one is needed.')
+            raise ApplicationExecutionFailed('Unable to get data from provided input')
 
     def _hunting_with_advanced_search(self, action_result, hunting_report, vault_id, results_per_page, page_number):
         search_tasks = cloud.get_query_tasks(hunting_report, constants.HuntingCategory.ADVANCED_SEARCH)
@@ -209,12 +212,15 @@ class ReversinglabsConnector(BaseConnector):
         hunting_report, vault_id = self._get_threat_hunting_state(param)
         single_hash_value, rha1_type = self._get_single_file_similarity_parameter(param)
 
+        if not param.get(REVERSINGLABS_JSON_HUNTING_REPORT) and not param.get(phantom.APP_JSON_HASH):
+            raise Exception('No parameters provided. At least one is needed.')
+
         if hunting_report:
             self._hunting_with_file_similarity(action_result, hunting_report, vault_id)
         elif single_hash_value:
             self._file_similarity_make_single_query(action_result, single_hash_value, rha1_type)
         else:
-            raise ApplicationExecutionFailed('No parameters provided. At least one is needed.')
+            raise ApplicationExecutionFailed('Unable to get data from provided input')
 
     def _get_single_file_similarity_parameter(self, parameters):
         sha1_value = parameters.get(phantom.APP_JSON_HASH)
@@ -224,7 +230,7 @@ class ReversinglabsConnector(BaseConnector):
             return None, None
 
         if sha1_value and not phantom.is_sha1(sha1_value):
-            raise ApplicationExecutionFailed('Provided file hash must be SHA1.')
+            raise ApplicationExecutionFailed('Provided file hash must be SHA1')
 
         rha1_type = None
         if sample_type:
@@ -300,12 +306,15 @@ class ReversinglabsConnector(BaseConnector):
         hunting_report, vault_id = self._get_threat_hunting_state(param)
         uri_term = param.get(REVERSINGLABS_JSON_URI)
 
+        if not param.get(REVERSINGLABS_JSON_HUNTING_REPORT) and not uri_term:
+            raise Exception('No parameters provided. At least one is needed.')
+
         if hunting_report:
             self._hunting_with_uri_statistics(action_result, hunting_report, vault_id)
         elif uri_term:
             self._uri_statistics_make_single_query(action_result, uri_term)
         else:
-            raise ApplicationExecutionFailed('No parameters provided. At least one is needed.')
+            raise ApplicationExecutionFailed('Unable to get data from provided input')
 
     def _hunting_with_uri_statistics(self, action_result, hunting_report, vault_id):
         uri_tasks = cloud.get_query_tasks(hunting_report, constants.HuntingCategory.URI_ANALYTICS)
@@ -333,7 +342,7 @@ class ReversinglabsConnector(BaseConnector):
         action_result.add_data(api_data)
 
     def _make_uri_statistics_api_request(self, uri_term):
-        uri_sha1 = self._generate_sha1_hash(uri_term.encode('utf-8'))
+        uri_sha1 = self._generate_sha1_hash(uri_term)
         uri_request_url = self._uri_statistics_url.format(sha1=uri_sha1)
         response = requests.get(uri_request_url, timeout=10, auth=self._auth, headers=self._headers, verify=self._verify_cert)
 
@@ -348,12 +357,15 @@ class ReversinglabsConnector(BaseConnector):
         hunting_report, vault_id = self._get_threat_hunting_state(param)
         thumbprint_value = param.get(REVERSINGLABS_JSON_THUMBPRINT)
 
+        if not param.get(REVERSINGLABS_JSON_HUNTING_REPORT) and not thumbprint_value:
+            raise Exception('No parameters provided. At least one is needed.')
+
         if hunting_report:
             self._hunting_with_certificate_analytics(action_result, hunting_report, vault_id)
         elif thumbprint_value:
             self._cert_analytics_make_single_query(action_result, thumbprint_value)
         else:
-            raise ApplicationExecutionFailed('No parameters provided. At least one is needed.')
+            raise ApplicationExecutionFailed('Unable to get data from provided input')
 
     def _hunting_with_certificate_analytics(self, action_result, hunting_report, vault_id):
         cert_tasks = cloud.get_query_tasks(hunting_report, constants.HuntingCategory.CERTIFICATE_ANALYTICS)
@@ -400,7 +412,7 @@ class ReversinglabsConnector(BaseConnector):
             return 'sha1'
         if phantom.is_sha256(value):
             return 'sha256'
-        raise ApplicationExecutionFailed('Must be valid MD5, SHA1 or SHA256 hash value.')
+        raise ApplicationExecutionFailed('Must be valid MD5, SHA1 or SHA256 hash value')
 
     def action_asset_connectivity(self, action_result, param):
         # just MWP for now, need to test other APIs, at least one should work.
@@ -413,13 +425,13 @@ class ReversinglabsConnector(BaseConnector):
                                  headers=self._headers, verify=self._verify_cert)
 
         if not response.ok:
-            status_message = '{0}. {1}. HTTP status_code: {2}, reason: {3}'.format(
+            status_message = '{0}. {1}. HTTP status_code: {2}, reason: {3}, URL: {4}'.format(
                 REVERSINGLABS_ERR_CONNECTIVITY_TEST, REVERSINGLABS_MSG_CHECK_CREDENTIALS,
-                response.status_code, response.reason
+                response.status_code, response.reason, self._mwp_url
             )
-            self.save_progress("URL: {}".format(self._mwp_url))
             raise Exception(status_message)
 
+        self.save_progress(REVERSINGLABS_SUCC_CONNECTIVITY_TEST)
         return REVERSINGLABS_SUCC_CONNECTIVITY_TEST
 
     @classmethod
@@ -436,12 +448,15 @@ class ReversinglabsConnector(BaseConnector):
         hunting_report, vault_id = self._get_threat_hunting_state(param)
         single_hash_value, hash_type = self._get_single_hash_parameter(param)
 
+        if not param.get(REVERSINGLABS_JSON_HUNTING_REPORT) and not param.get(phantom.APP_JSON_HASH):
+            raise Exception('No parameters provided. At least one is needed.')
+
         if hunting_report:
             self._hunt_with_file_reputation(action_result, hunting_report, vault_id)
         elif single_hash_value:
             self._file_reputation_creates_new_hunting_state(action_result, hash_type, single_hash_value)
         else:
-            raise ApplicationExecutionFailed('No parameters provided. At least one is needed.')
+            raise ApplicationExecutionFailed('Unable to get data from provided input')
 
     def _get_single_hash_parameter(self, parameters):
         hash_value = parameters.get(phantom.APP_JSON_HASH)
@@ -511,16 +526,17 @@ class ReversinglabsConnector(BaseConnector):
         joe_report_vault_id = param.get(REVERSINGLABS_JSON_JOE_REPORT)
 
         if not hunting_report and not joe_report_vault_id:
-            raise ApplicationExecutionFailed('Parameters not provided')
+            raise ApplicationExecutionFailed('No parameters provided. At least one is needed.')
 
         joe_report = None
         if joe_report_vault_id:
             success, msg, files_array = ph_rules.vault_info(vault_id=joe_report_vault_id)
-            if success:
-                file_data = list(files_array)[0]
-                with open(file_data['path'], 'rb') as f:
-                    payload = f.read()
-                joe_report = json.loads(payload.decode('utf-8'))
+            if not success:
+                raise Exception(f'Unable to get Vault item details. Error Details: {msg}')
+            file_data = list(files_array)[0]
+            with open(file_data['path'], 'rb') as f:
+                payload = f.read()
+            joe_report = json.loads(payload.decode('utf-8'))
 
         if hunting_report:
             joe_sandbox.add_dynamic_analysis(hunting_report, joe_report)
@@ -558,11 +574,12 @@ class ReversinglabsConnector(BaseConnector):
         hunting_report_vault_id = parameters.get(REVERSINGLABS_JSON_HUNTING_REPORT)
         if hunting_report_vault_id:
             success, msg, files_array = ph_rules.vault_info(vault_id=hunting_report_vault_id)
-            if success:
-                file_data = list(files_array)[0]
-                with open(file_data['path'], 'rb') as f:
-                    payload = f.read()
-                return json.loads(payload.decode('utf-8')), hunting_report_vault_id
+            if not success:
+                raise Exception(f'Unable to get Vault item details. Error Details: {msg}')
+            file_data = list(files_array)[0]
+            with open(file_data['path'], 'rb') as f:
+                payload = f.read()
+            return json.loads(payload.decode('utf-8')), hunting_report_vault_id
 
         return None, None
 

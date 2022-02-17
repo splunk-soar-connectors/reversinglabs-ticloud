@@ -4,7 +4,7 @@
     "package_name": "phantom_titaniumcloud",
     "description": "This app integrates with ReversingLabs cloud services to implement reputation and investigative actions for file samples and their metadata",
     "type": "reputation",
-    "main_module": "reversinglabs_connector.py",
+    "main_module": "reversinglabs_ticloud_connector.py",
     "app_version": "2.3.0",
     "utctime_updated": "2022-01-12T13:06:46.000000Z",
     "product_vendor": "ReversingLabs",
@@ -14,9 +14,9 @@
     "min_phantom_version": "5.1.0",
     "publisher": "ReversingLabs",
     "consolidate_widgets": false,
-    "logo": "logo_reversinglabs.svg",
-    "logo_dark": "logo_reversinglabs_dark.svg",
-    "license": "Copyright (c) 2016-2022 Splunk Inc.",
+    "logo": "logo_reversinglabs_ticloud.svg",
+    "logo_dark": "logo_reversinglabs_ticloud_dark.svg",
+    "license": "Copyright (c) ReversingLabs Inc 2016-2022",
     "python_version": "3",
     "pip_dependencies": {
         "wheel": [
@@ -106,6 +106,7 @@
                 "joe_report_vault_id": {
                     "description": "Joe Sandbox dynamic analysis report vault ID",
                     "data_type": "string",
+                    "primary": true,
                     "contains": [
                         "vault id"
                     ],
@@ -114,6 +115,7 @@
                 "hunting_report_vault_id": {
                     "description": "Threat hunting report vault id",
                     "data_type": "string",
+                    "primary": true,
                     "contains": [
                         "vault id"
                     ],
@@ -127,6 +129,9 @@
                     "data_type": "string",
                     "contains": [
                         "vault id"
+                    ],
+                    "example_values": [
+                        "c51af23dc27c0544a64b52647a93afb6ef0ec46e"
                     ]
                 },
                 {
@@ -134,6 +139,9 @@
                     "data_type": "string",
                     "contains": [
                         "vault id"
+                    ],
+                    "example_values": [
+                        "c51af23dc27c0544a64b52647a93afb6ef0ec46e"
                     ]
                 },
                 {
@@ -141,6 +149,9 @@
                     "data_type": "string",
                     "contains": [
                         "vault id"
+                    ],
+                    "example_values": [
+                        "c51af23dc27c0544a64b52647a93afb6ef0ec46e"
                     ]
                 },
                 {
@@ -203,7 +214,7 @@
                 "type": "custom",
                 "width": 10,
                 "height": 5,
-                "view": "reversinglabs_view.hunting_visualization",
+                "view": "reversinglabs_ticloud_view.hunting_visualization",
                 "title": "ReversingLabs Joe Sandbox plug-in for Threat Hunting"
             }
         },
@@ -234,6 +245,7 @@
                 "hash": {
                     "description": "File hash to query",
                     "data_type": "string",
+                    "primary": true,
                     "contains": [
                         "md5",
                         "sha1",
@@ -244,6 +256,7 @@
                 "hunting_report_vault_id": {
                     "description": "Threat hunting report vault id",
                     "data_type": "string",
+                    "primary": true,
                     "contains": [
                         "vault id"
                     ],
@@ -258,6 +271,9 @@
                         "md5",
                         "sha1",
                         "sha256"
+                    ],
+                    "example_values": [
+                        "4e8fb1681467164dc4418c47d0a600528e67900b"
                     ]
                 },
                 {
@@ -265,6 +281,9 @@
                     "data_type": "string",
                     "contains": [
                         "vault id"
+                    ],
+                    "example_values": [
+                        "c51af23dc27c0544a64b52647a93afb6ef0ec46e"
                     ]
                 },
                 {
@@ -272,6 +291,9 @@
                     "data_type": "string",
                     "contains": [
                         "vault id"
+                    ],
+                    "example_values": [
+                        "c51af23dc27c0544a64b52647a93afb6ef0ec46e"
                     ]
                 },
                 {
@@ -334,7 +356,7 @@
                 "type": "custom",
                 "width": 10,
                 "height": 5,
-                "view": "reversinglabs_view.hunting_visualization",
+                "view": "reversinglabs_ticloud_view.hunting_visualization",
                 "title": "File Reputation"
             }
         },
@@ -367,6 +389,7 @@
                 "hunting_report_vault_id": {
                     "description": "Threat hunting report vault id",
                     "data_type": "string",
+                    "primary": true,
                     "contains": [
                         "vault id"
                     ],
@@ -379,6 +402,9 @@
                     "data_type": "string",
                     "contains": [
                         "vault id"
+                    ],
+                    "example_values": [
+                        "c51af23dc27c0544a64b52647a93afb6ef0ec46e"
                     ]
                 },
                 {
@@ -404,6 +430,9 @@
                     "data_type": "string",
                     "contains": [
                         "vault id"
+                    ],
+                    "example_values": [
+                        "c51af23dc27c0544a64b52647a93afb6ef0ec46e"
                     ]
                 },
                 {
@@ -466,7 +495,7 @@
                 "type": "custom",
                 "width": 10,
                 "height": 5,
-                "view": "reversinglabs_view.hunting_visualization",
+                "view": "reversinglabs_ticloud_view.hunting_visualization",
                 "title": "File Reputation"
             }
         },
@@ -484,6 +513,7 @@
                 "hash": {
                     "description": "File SHA1 hash value",
                     "data_type": "string",
+                    "primary": true,
                     "contains": [
                         "sha1"
                     ],
@@ -497,6 +527,7 @@
                 "hunting_report_vault_id": {
                     "description": "Threat hunting report that represents current state of the hunting workflow",
                     "data_type": "string",
+                    "primary": true,
                     "contains": [
                         "vault id"
                     ],
@@ -509,6 +540,9 @@
                     "data_type": "string",
                     "contains": [
                         "sha1"
+                    ],
+                    "example_values": [
+                        "4e8fb1681467164dc4418c47d0a600528e67900b"
                     ]
                 },
                 {
@@ -516,6 +550,9 @@
                     "data_type": "string",
                     "contains": [
                         "vault id"
+                    ],
+                    "example_values": [
+                        "c51af23dc27c0544a64b52647a93afb6ef0ec46e"
                     ]
                 },
                 {
@@ -530,6 +567,9 @@
                     "data_type": "string",
                     "contains": [
                         "vault id"
+                    ],
+                    "example_values": [
+                        "c51af23dc27c0544a64b52647a93afb6ef0ec46e"
                     ]
                 },
                 {
@@ -592,7 +632,7 @@
                 "type": "custom",
                 "width": 10,
                 "height": 5,
-                "view": "reversinglabs_view.hunting_visualization",
+                "view": "reversinglabs_ticloud_view.hunting_visualization",
                 "title": "File Reputation"
             }
         },
@@ -615,6 +655,7 @@
                 "hunting_report_vault_id": {
                     "description": "Threat hunting report that represent current state of the hunting workflow",
                     "data_type": "string",
+                    "primary": true,
                     "contains": [
                         "vault id"
                     ],
@@ -627,6 +668,9 @@
                     "data_type": "string",
                     "contains": [
                         "vault id"
+                    ],
+                    "example_values": [
+                        "c51af23dc27c0544a64b52647a93afb6ef0ec46e"
                     ]
                 },
                 {
@@ -641,6 +685,9 @@
                     "data_type": "string",
                     "contains": [
                         "vault id"
+                    ],
+                    "example_values": [
+                        "c51af23dc27c0544a64b52647a93afb6ef0ec46e"
                     ]
                 },
                 {
@@ -703,7 +750,7 @@
                 "type": "custom",
                 "width": 10,
                 "height": 5,
-                "view": "reversinglabs_view.hunting_visualization",
+                "view": "reversinglabs_ticloud_view.hunting_visualization",
                 "title": "File Reputation"
             }
         },
@@ -726,6 +773,7 @@
                 "hunting_report_vault_id": {
                     "description": "Threat hunting report that represents current state of the hunting workflow",
                     "data_type": "string",
+                    "primary": true,
                     "contains": [
                         "vault id"
                     ],
@@ -738,6 +786,9 @@
                     "data_type": "string",
                     "contains": [
                         "vault id"
+                    ],
+                    "example_values": [
+                        "c51af23dc27c0544a64b52647a93afb6ef0ec46e"
                     ]
                 },
                 {
@@ -749,7 +800,13 @@
                 },
                 {
                     "data_path": "action_result.data.*.hunting_report_vault_id",
-                    "data_type": "string"
+                    "data_type": "string",
+                    "contains": [
+                        "vault id"
+                    ],
+                    "example_values": [
+                        "c51af23dc27c0544a64b52647a93afb6ef0ec46e"
+                    ]
                 },
                 {
                     "data_path": "action_result.data.*.readable_summary.classification.classification",
@@ -811,7 +868,7 @@
                 "type": "custom",
                 "width": 10,
                 "height": 5,
-                "view": "reversinglabs_view.hunting_visualization",
+                "view": "reversinglabs_ticloud_view.hunting_visualization",
                 "title": "File Reputation"
             }
         }
