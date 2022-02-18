@@ -50,11 +50,11 @@ class ReversinglabsConnector(BaseConnector):
 
         self._headers = {'content-type': 'application/octet-stream', 'User-Agent': 'ReversingLabs Phantom TiCloud v2.3'}
         self._auth = None
+        self._base_url = TICLOUD_AWS_HOST_NAME
         self._mwp_url = TICLOUD_AWS_HOST_NAME + MAL_PRESENCE_API_URL
         self._xref_url = TICLOUD_AWS_HOST_NAME + XREF_API_URL
         self._search_url = TICLOUD_AWS_HOST_NAME + ADVANCED_SEARCH_API_URL
         self._rha1_url = TICLOUD_AWS_HOST_NAME + RHA1_ANALYTICS_API_URL
-        self._uri_statistics_url = TICLOUD_AWS_HOST_NAME + URI_STATISTICS_API_URL
         self._cert_analytics_url = TICLOUD_AWS_HOST_NAME + CERTIFICATE_ANALYTICS_URL
         self._verify_cert = True
 
@@ -77,13 +77,12 @@ class ReversinglabsConnector(BaseConnector):
         )
 
         if 'url' in config:
-            base_url = config.get('url').rstrip('/')
-            self._mwp_url = '{0}{1}'.format(base_url, MAL_PRESENCE_API_URL)
-            self._xref_url = '{0}{1}'.format(base_url, XREF_API_URL)
-            self._search_url = '{0}{1}'.format(base_url, ADVANCED_SEARCH_API_URL)
-            self._rha1_url = '{0}{1}'.format(base_url, RHA1_ANALYTICS_API_URL)
-            self._uri_statistics_url = '{0}{1}'.format(base_url, URI_STATISTICS_API_URL)
-            self._cert_analytics_url = '{0}{1}'.format(base_url, CERTIFICATE_ANALYTICS_URL)
+            self._base_url = config.get('url').rstrip('/')
+            self._mwp_url = '{0}{1}'.format(self._base_url, MAL_PRESENCE_API_URL)
+            self._xref_url = '{0}{1}'.format(self._base_url, XREF_API_URL)
+            self._search_url = '{0}{1}'.format(self._base_url, ADVANCED_SEARCH_API_URL)
+            self._rha1_url = '{0}{1}'.format(self._base_url, RHA1_ANALYTICS_API_URL)
+            self._cert_analytics_url = '{0}{1}'.format(self._base_url, CERTIFICATE_ANALYTICS_URL)
 
         if 'verify_server_cert' in config:
             self._verify_cert = config['verify_server_cert']
@@ -130,8 +129,8 @@ class ReversinglabsConnector(BaseConnector):
             success_message = action(action_result, param)
         except requests.HTTPError as err:
             return action_result.set_status(phantom.APP_ERROR, 'Request to server failed. {}'.format(err))
-        except Exception as err:
-            return action_result.set_status(phantom.APP_ERROR, str(err))
+        # except Exception as err:
+        #     return action_result.set_status(phantom.APP_ERROR, str(err))
 
         if success_message:
             return action_result.set_status(phantom.APP_SUCCESS, success_message)
@@ -343,7 +342,7 @@ class ReversinglabsConnector(BaseConnector):
 
     def _make_uri_statistics_api_request(self, uri_term):
         uri_sha1 = self._generate_sha1_hash(uri_term)
-        uri_request_url = self._uri_statistics_url.format(sha1=uri_sha1)
+        uri_request_url = '{0}{1}'.format(self._base_url, URI_STATISTICS_API_URL.format(sha1=uri_sha1))
         response = requests.get(uri_request_url, timeout=10, auth=self._auth, headers=self._headers, verify=self._verify_cert)
 
         if response.ok:
