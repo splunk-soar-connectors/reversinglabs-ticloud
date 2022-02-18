@@ -129,8 +129,8 @@ class ReversinglabsConnector(BaseConnector):
             success_message = action(action_result, param)
         except requests.HTTPError as err:
             return action_result.set_status(phantom.APP_ERROR, 'Request to server failed. {}'.format(err))
-        # except Exception as err:
-        #     return action_result.set_status(phantom.APP_ERROR, str(err))
+        except Exception as err:
+            return action_result.set_status(phantom.APP_ERROR, str(err))
 
         if success_message:
             return action_result.set_status(phantom.APP_SUCCESS, success_message)
