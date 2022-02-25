@@ -1,1 +1,10 @@
 **Unreleased**
+* Compatibility changes for Python 3 support
+* Application name changed to 'RL TitaniumCloud REST APIs' from 'RL TitaniumCloud File Reputation'
+* Added below-mentioned new actions:
+    * certificate analytics 
+    * uri statistics 
+    * file similarity analytics 
+    * advanced search 
+    * joe sandbox adapter 
+* Fixed miscellaneous JSON and documentation issues
